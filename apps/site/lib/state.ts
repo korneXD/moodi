@@ -9,6 +9,8 @@ export interface PlaygroundState {
   size: number;
   speed: number;
   followCursor: boolean;
+  /** the playground plays sounds by default; the package itself is silent unless asked */
+  sound: boolean;
 }
 
 export const INITIAL: PlaygroundState = {
@@ -18,6 +20,7 @@ export const INITIAL: PlaygroundState = {
   size: DEFAULTS.size as number,
   speed: DEFAULTS.speed,
   followCursor: DEFAULTS.followCursor,
+  sound: true,
 };
 
 export const SPEEDS = [0.5, 1, 1.5, 2, 0] as const;

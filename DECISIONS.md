@@ -105,11 +105,14 @@ stays as a visually hidden `h1`, and the mood name below the character is an `h2
 
 ## Sound and size animation
 
-- **Sound effects are site-only** (`apps/site/lib/sound.ts`): one short effect per mood,
-  synthesized with Web Audio (no audio files, nothing added to the npm package). They play
-  on the hero's `moodchange`, but not when a click reaction returns to the current mood.
-  On by default with a **Sound** toggle (stored in `localStorage`); audio unlocks on the
-  first pointer or key press, as browsers require.
+- **Sound effects live in the package** (`core/sound.ts`, moodi 0.2.0) behind a `sound`
+  attribute/prop, **off by default** (a UI component should not make noise unless asked);
+  the playground turns it on and the generated code then includes `sound`. One short Web
+  Audio effect per mood (no files), on every mood change and when the buddy first appears,
+  but not when a click reaction returns to the current mood. Browsers block audio until a
+  click, tap or key press: a sound requested earlier waits (6 s for the first appearance,
+  1.2 s for a mood change) and plays once audio is allowed. The playground's **Sound**
+  toggle is remembered in `localStorage`.
 - **Size changes animate.** The hero keeps a fixed canvas and is scaled with a springy CSS
   transform around its feet, so the label stays put and the canvas never re-allocates
   while dragging the slider. The library also gives a small squash-and-stretch whenever

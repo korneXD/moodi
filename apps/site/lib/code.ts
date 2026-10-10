@@ -17,6 +17,8 @@ function props(s: PlaygroundState): Prop[] {
   if (s.size !== INITIAL.size) out.push({ name: 'size', attr: 'size', value: String(s.size), literal: true });
   if (s.speed !== INITIAL.speed) out.push({ name: 'speed', attr: 'speed', value: String(s.speed), literal: true });
   if (!s.followCursor) out.push({ name: 'followCursor', attr: 'follow-cursor', value: 'false', literal: true });
+  // the package default is silent, so sound shows up whenever it is on
+  if (s.sound) out.push({ name: 'sound', attr: 'sound', value: 'true', literal: true });
   return out;
 }
 
@@ -40,8 +42,9 @@ export function codeTokens(s: PlaygroundState, tab: Tab): Token[] {
     if (!ps.length) t.push([' />', 'p']);
     else {
       for (const p of ps) {
-        t.push(['\n  ', 'p'], [p.name, 'attr'], ['=', 'p']);
-        t.push(p.literal ? [`{${p.value}}`, 'kw'] : [`"${p.value}"`, 'str']);
+        t.push(['\n  ', 'p'], [p.name, 'attr']);
+        if (p.value === 'true') continue; // boolean shorthand: <Moodi sound />
+        t.push(['=', 'p'], p.literal ? [`{${p.value}}`, 'kw'] : [`"${p.value}"`, 'str']);
       }
       t.push(['\n/>', 'p']);
     }

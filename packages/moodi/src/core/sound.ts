@@ -1,8 +1,9 @@
-import type { Mood } from "moodi/react";
+import type { Mood } from "./constants";
 
 /**
- * Tiny synthesized sound effects for the playground. Site only: the npm package stays
- * silent. Everything is generated with Web Audio, so there are no files to download.
+ * One short synthesized effect per mood (Web Audio, no files). Off unless the element
+ * has `sound` turned on. Browsers only start audio after a click, tap or key press, so a
+ * sound requested before that waits briefly for the first gesture.
  */
 
 let ctx: AudioContext | null = null;
@@ -10,6 +11,7 @@ let master: GainNode | null = null;
 
 function audio(): AudioContext | null {
   if (typeof window === "undefined" || !("AudioContext" in window)) return null;
+  listenForGesture();
   if (!ctx) {
     ctx = new AudioContext();
     // a soft lowpass keeps every effect round and quiet
@@ -98,13 +100,39 @@ const SOUNDS: Record<Mood, (c: AudioContext) => void> = {
     [1319, 1568, 2093, 1760].forEach((f, i) => tone(c, { freq: f, at: i * 0.08, dur: 0.22, gain: 0.04 })),
 };
 
-export function playMood(mood: Mood) {
-  const c = audio();
-  if (!c || c.state !== "running") return;
-  SOUNDS[mood](c);
+let pending: { mood: Mood; until: number } | null = null;
+let listening = false;
+
+function listenForGesture() {
+  if (listening) return;
+  listening = true;
+  const unlock = () => {
+    if (!ctx) return;
+    // resume() inside the gesture handler: Safari needs it there
+    void ctx.resume().then(() => {
+      if (pending && performance.now() < pending.until) SOUNDS[pending.mood](ctx!);
+      pending = null;
+    });
+  };
+  for (const e of ["pointerdown", "touchend", "keydown"]) addEventListener(e, unlock, { passive: true });
 }
 
-/** Call from a user gesture so the browser lets audio start. */
-export function unlockAudio() {
-  audio();
+/**
+ * Plays the effect for a mood. If the browser hasn't allowed audio yet, the sound waits
+ * for it: briefly for a mood change (it may be the very click that unlocks audio), a few
+ * seconds with `wait` (the first appearance on page load).
+ */
+export function playMood(mood: Mood, wait = false) {
+  const c = audio();
+  if (!c) return;
+  if (c.state === "running") {
+    pending = null;
+    SOUNDS[mood](c);
+    return;
+  }
+  pending = { mood, until: performance.now() + (wait ? 6000 : 1200) };
+  void c.resume().then(() => {
+    if (pending && performance.now() < pending.until) SOUNDS[pending.mood](c);
+    pending = null;
+  });
 }

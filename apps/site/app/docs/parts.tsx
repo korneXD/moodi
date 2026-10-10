@@ -15,6 +15,7 @@ const PROPS: [prop: string, attr: string, type: string, def: string, desc: strin
   ["followCursor", "follow-cursor", "boolean", "true", "Eyes, and slightly the body, follow the pointer."],
   ["interactive", "interactive", "boolean", "true", "Hover lift and a little reaction on click."],
   ["shadow", "shadow", "boolean", "true", "Soft ground shadow."],
+  ["sound", "sound", "boolean", "false", "A short sound effect per mood, and when it first appears."],
 ];
 
 export function PropsTable() {

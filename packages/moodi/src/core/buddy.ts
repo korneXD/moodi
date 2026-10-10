@@ -29,6 +29,7 @@ import {
   type Tickable,
 } from './runtime';
 import { createBase, SHAPE_META, shapePoint } from './shapes';
+import { playMood } from './sound';
 
 export interface BuddyState {
   shape: Shape;
@@ -40,6 +41,7 @@ export interface BuddyState {
   followCursor: boolean;
   interactive: boolean;
   shadow: boolean;
+  sound: boolean;
 }
 
 const PIVOT = -0.85;
@@ -138,6 +140,7 @@ export class Buddy implements Tickable {
   hovering = false;
   private overlay: Record<OverlayKind, number> = { dots: 0, zz: 0, hearts: 0, waves: 0, bang: 0 };
   private needsFrame = true;
+  private ready = false;
   // adaptive resolution: drop pixel density when frames are expensive (software GL, weak GPUs)
   private css: [number, number] = [0, 0];
   private quality = 1;
@@ -298,6 +301,8 @@ outgoingLight = mix(outgoingLight, diffuseColor.rgb * 1.12, emis * 0.65);
       this.cheekT = s.cheekColor ? parseColor(s.cheekColor, autoCheek(this.bodyT)) : autoCheek(this.bodyT);
     }
     if (s.mood !== prev.mood && !this.reaction) this.show(s.mood);
+    // switching sound on plays the current mood, so the toggle is audible
+    if (s.sound && !prev.sound && this.ready) playMood(this.shown);
     this.needsFrame = true;
     wake();
   }
@@ -330,8 +335,9 @@ outgoingLight = mix(outgoingLight, diffuseColor.rgb * 1.12, emis * 0.65);
 
   // ---------- internals ----------
 
-  private show(mood: Mood) {
+  private show(mood: Mood, audible = true) {
     if (mood === this.shown) return;
+    if (audible && this.state.sound && this.ready) playMood(mood);
     const previous = this.shown;
     this.prevShown = previous;
     this.prevTau = this.tau;
@@ -355,7 +361,8 @@ outgoingLight = mix(outgoingLight, diffuseColor.rgb * 1.12, emis * 0.65);
       this.reaction.left -= dt;
       if (this.reaction.left <= 0) {
         this.reaction = null;
-        this.show(s.mood);
+        // back from a reaction is not a new state: stay quiet
+        this.show(s.mood, false);
       }
     }
 
@@ -469,8 +476,10 @@ outgoingLight = mix(outgoingLight, diffuseColor.rgb * 1.12, emis * 0.65);
     const t0 = performance.now();
     if (this.render(p)) {
       this.needsFrame = false;
-      if (this.onReady) {
-        this.onReady();
+      if (!this.ready) {
+        this.ready = true;
+        if (this.state.sound) playMood(this.shown, true);
+        this.onReady?.();
         this.onReady = undefined;
       }
       this.adapt(performance.now() - t0);

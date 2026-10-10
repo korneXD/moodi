@@ -33,6 +33,8 @@ export interface MoodiProps {
   interactive?: boolean;
   /** Soft ground shadow. Default `true`. */
   shadow?: boolean;
+  /** A short sound effect on every mood change (and when it first appears). Default `false`. */
+  sound?: boolean;
 }
 
 export interface MoodChangeDetail {
@@ -67,6 +69,7 @@ export const DEFAULTS = {
   followCursor: true,
   interactive: true,
   shadow: true,
+  sound: false,
 };
 
 export const PALETTES: Readonly<Record<string, string>> = {

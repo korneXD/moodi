@@ -6,7 +6,7 @@
 - React: `import { Moodi } from 'moodi/react'` then `<Moodi mood={isLoading ? 'loading' : 'idle'} />` (SSR-safe; three.js loads lazily in the browser)
 - Web Component: `<moodi-buddy mood="happy"></moodi-buddy>` plus `import 'moodi'`
 - CDN: `<script type="module" src="https://esm.sh/moodi"></script>`
-- Props: shape (ghost | pebble | blob | drop | bean | cube, default ghost), mood (default idle), color (default #6c5ce7), faceColor, cheekColor, size (default 160), speed (0 pauses), followCursor, interactive, shadow
+- Props: shape (ghost | pebble | blob | drop | bean | cube, default ghost), mood (default idle), color (default #6c5ce7), faceColor, cheekColor, size (default 160), speed (0 pauses), followCursor, interactive, shadow, sound (off by default)
 - Imperative: `el.mood = 'thinking'`, `el.react('happy', { duration: 1200 })`, `moodchange` event with `{ mood, previous, reaction }`
 - License: MIT. Author: @itsk0rn3l
 

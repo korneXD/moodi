@@ -12,6 +12,7 @@ const ATTRS = [
   'follow-cursor',
   'interactive',
   'shadow',
+  'sound',
 ] as const;
 
 const bool = (v: string | null, d: boolean) => (v === null ? d : v !== 'false' && v !== '0');
@@ -117,6 +118,7 @@ export class MoodiBuddyElement extends Base {
       followCursor: bool(this.getAttribute('follow-cursor'), DEFAULTS.followCursor),
       interactive: bool(this.getAttribute('interactive'), DEFAULTS.interactive),
       shadow: bool(this.getAttribute('shadow'), DEFAULTS.shadow),
+      sound: bool(this.getAttribute('sound'), DEFAULTS.sound),
     };
   }
 
@@ -206,6 +208,12 @@ export class MoodiBuddyElement extends Base {
   }
   set shadow(v: boolean) {
     this.setAttribute('shadow', String(v));
+  }
+  get sound(): boolean {
+    return bool(this.getAttribute('sound'), DEFAULTS.sound);
+  }
+  set sound(v: boolean) {
+    this.setAttribute('sound', String(v));
   }
 }
 

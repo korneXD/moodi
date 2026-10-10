@@ -73,6 +73,7 @@ With the Web Component, put an `<img>` inside `<moodi-buddy>`; it shows until th
 | `followCursor` (`follow-cursor`) | `boolean`                                                 | `true`      | Eyes (and slightly the body) follow the pointer |
 | `interactive`                 | `boolean`                                                    | `true`      | Hover lift, click reaction                    |
 | `shadow`                      | `boolean`                                                    | `true`      | Soft ground shadow                            |
+| `sound`                       | `boolean`                                                    | `false`     | Short synthesized effect per mood (and when it appears) |
 
 Boolean attributes on the Web Component take `"true"` / `"false"`.
 
@@ -101,7 +102,9 @@ Also exported: `SHAPES`, `MOODS`, `PALETTES`, `MOOD_INFO`, `DEFAULTS`, `defineMo
 - `prefers-reduced-motion`: only blinking and soft fades.
 - Software WebGL (SwiftShader, llvmpipe): no continuous animation, frames only on change, 1× pixels.
 - Changing `size` gives a little squash-and-stretch.
-- No sound: the package is silent (the playground's sound effects are site-only).
+- Sound is opt-in (`sound` / `sound="true"`): one tiny Web Audio effect per mood, no audio files.
+  Browsers only allow audio after a click, tap or key press; a sound requested earlier waits a
+  few seconds for that first gesture.
 - Transparent background, pixel ratio capped at 2.
 - `role="img"` and `aria-label="moodi: <mood>"` (set your own `aria-label` to override).
 - ~11 kB gzip, three.js excluded.

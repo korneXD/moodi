@@ -75,6 +75,7 @@ export const Moodi = forwardRef<MoodiBuddyElement | null, MoodiReactProps>(funct
     followCursor,
     interactive,
     shadow,
+    sound,
     onMoodChange,
     onReady,
     poster,
@@ -125,6 +126,7 @@ export const Moodi = forwardRef<MoodiBuddyElement | null, MoodiReactProps>(funct
     'follow-cursor': flag(followCursor),
     interactive: flag(interactive),
     shadow: flag(shadow),
+    sound: flag(sound),
     // sized before the element upgrades, so nothing shifts while three.js loads
     style: { display: 'inline-block', width: cssSize(size), height: cssSize(size), verticalAlign: 'middle', ...style },
     suppressHydrationWarning: true,
