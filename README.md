@@ -6,7 +6,7 @@ happy, error, sleeping.
 
 ![moodi](.github/assets/readme.png)
 
-- **Playground:** <https://moodi-two-tau.vercel.app>
+- **Playground:** <https://www.getmoodi.dev>
 - **Package docs:** [packages/moodi/README.md](packages/moodi/README.md)
 - by [@itsk0rn3l](https://x.com/itsk0rn3l)
 

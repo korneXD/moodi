@@ -11,6 +11,7 @@ Choices made where the spec left room, or where the owner changed it.
   pebble / peach. Iris is the first palette entry; Lilac stays.
 - **No URL query params.** The spec mirrored state into `?shape=…`; the owner did not want
   that in the address bar, so the playground keeps state in memory only.
+- **Domain `getmoodi.dev`** instead of `moodi.dev`.
 - **Repository is public** (`korneXD/moodi`) so the GitHub link in the header works.
 - Header credits the author: `by @itsk0rn3l` with the X avatar (stored locally in
   `apps/site/public/itsk0rn3l.jpg`, no third-party request at runtime).
@@ -54,8 +55,9 @@ Choices made where the spec left room, or where the owner changed it.
 - `/og`, `/og/icon` and `/og/readme` are compositions used to regenerate
   `public/opengraph-v2.png`, `app/icon.png`, `app/apple-icon.png` and
   `.github/assets/readme.png` from a real render (headless screenshot), not a drawing.
-- Domain: `moodi.dev` is not registered yet; `SITE_URL` falls back to the Vercel
-  production URL.
+- Domain: `getmoodi.dev`. Like roastfast, the `www.` host is canonical and the apex
+  redirects to it (308). `NEXT_PUBLIC_SITE_URL=https://www.getmoodi.dev` on Vercel;
+  without it `SITE_URL` falls back to the Vercel production URL.
 
 ## SEO and Vercel setup (mirrors roastfast)
 

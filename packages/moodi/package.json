@@ -61,7 +61,7 @@
     "url": "git+https://github.com/korneXD/moodi.git",
     "directory": "packages/moodi"
   },
-  "homepage": "https://moodi-two-tau.vercel.app",
+  "homepage": "https://www.getmoodi.dev",
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
