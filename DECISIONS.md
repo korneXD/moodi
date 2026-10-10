@@ -51,8 +51,9 @@ Choices made where the spec left room, or where the owner changed it.
   paint). The stage glow is three radial gradients built from the accent with hue-shifted
   neighbours (`oklch(from …)`), blended `screen` on dark and `multiply` on light.
 - `/lab` renders the full shape × mood matrix for visual checks (noindex).
-- `/og` and `/og/icon` are compositions used to regenerate `opengraph-image.png`,
-  `icon.png` and `apple-icon.png` from a real render (headless screenshot), not a drawing.
+- `/og`, `/og/icon` and `/og/readme` are compositions used to regenerate
+  `public/opengraph-v1.png`, `app/icon.png`, `app/apple-icon.png` and
+  `.github/assets/readme.png` from a real render (headless screenshot), not a drawing.
 - Domain: `moodi.dev` is not registered yet; `SITE_URL` falls back to the Vercel
   production URL.
 
