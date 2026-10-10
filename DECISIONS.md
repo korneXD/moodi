@@ -117,3 +117,14 @@ stays as a visually hidden `h1`, and the mood name below the character is an `h2
   transform around its feet, so the label stays put and the canvas never re-allocates
   while dragging the slider. The library also gives a small squash-and-stretch whenever
   `size` changes (`buddy.bump()`), which npm users get too.
+
+## Custom element constructor (0.2.1)
+
+The constructor used to set `--moodi-size` with `this.style.setProperty`, which adds a
+`style` attribute while constructing. The spec forbids that, so
+`document.createElement('moodi-buddy')` threw "The result must not have attributes" once the
+element was defined (e.g. React creating it after `moodi` was imported). The host size now
+lives in a shadow `<style>` (`:host{width;height}`), so the element never touches its own
+attributes during construction or later; outside CSS still wins over `:host`. The poster
+`<slot>` is appended in the constructor too (it was missing, so posters vanished on upgrade
+instead of at the first frame).

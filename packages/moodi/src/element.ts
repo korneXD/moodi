@@ -21,7 +21,7 @@ const cssSize = (v: string | number | null | undefined) => {
   return typeof v === 'number' || /^\d+(\.\d+)?$/.test(String(v)) ? `${v}px` : String(v);
 };
 
-const STYLE = `:host{display:inline-block;position:relative;cursor:pointer;width:var(--moodi-size);height:var(--moodi-size);vertical-align:middle;contain:layout paint style;-webkit-tap-highlight-color:transparent}
+const STYLE = `:host{display:inline-block;position:relative;cursor:pointer;vertical-align:middle;contain:layout paint style;-webkit-tap-highlight-color:transparent}
 :host([interactive="false"]){pointer-events:none}
 canvas{position:absolute;inset:0;display:block;width:100%;height:100%}
 slot{display:block;width:100%;height:100%}
@@ -38,14 +38,20 @@ export class MoodiBuddyElement extends Base {
   private io?: IntersectionObserver;
   private ro?: ResizeObserver;
   private root: ShadowRoot;
+  /** host size lives in the shadow stylesheet: never touch the host's own attributes */
+  private sizeStyle = document.createElement('style');
 
   constructor() {
     super();
     this.root = this.attachShadow({ mode: 'open' });
     const style = document.createElement('style');
     style.textContent = STYLE;
-    this.root.append(style);
-    this.style.setProperty('--moodi-size', cssSize(this.getAttribute('size')));
+    // light-DOM children (e.g. a poster <img>) show through the slot until the first 3D frame
+    this.root.append(style, document.createElement('slot'));
+    // the constructor must not add attributes (createElement throws "must not have
+    // attributes"), so size goes into a shadow stylesheet instead of the style attribute
+    this.root.append(this.sizeStyle);
+    this.applySize(this.getAttribute('size'));
   }
 
   connectedCallback() {
@@ -96,12 +102,17 @@ export class MoodiBuddyElement extends Base {
   attributeChangedCallback(name: string, old: string | null, val: string | null) {
     if (old === val) return;
     if (name === 'size') {
-      this.style.setProperty('--moodi-size', cssSize(val));
+      this.applySize(val);
       if (old !== null) this.buddy?.bump();
     }
     if (name === 'aria-label') return;
     this.buddy?.update(this.readState());
     if (name === 'mood' && this.buddy) this.syncLabel(this.buddy.currentMood);
+  }
+
+  private applySize(val: string | null) {
+    const size = cssSize(val);
+    this.sizeStyle.textContent = `:host{width:${size};height:${size}}`;
   }
 
   private readState(): BuddyState {
