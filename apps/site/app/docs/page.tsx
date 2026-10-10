@@ -2,13 +2,65 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Moodi } from "moodi/react";
 import { MoodList, Palettes, PropsTable, ShapeNames } from "./parts";
-import { GITHUB_URL } from "@/lib/site";
+import { AUTHOR, GITHUB_URL, jsonLd, SITE_NAME, SITE_URL, TWITTER_HANDLE } from "@/lib/site";
+
+const DOCS_TITLE = "Docs";
+const DOCS_DESCRIPTION =
+  "Install moodi and drop a tiny 3D mood buddy into any website: React, Web Component or CDN. Props, moods, events and the API.";
+const DOCS_OG_DESCRIPTION = "Install moodi, then pick a shape, a mood and a color. React, Web Component or CDN.";
+// Versioned like the home image: link previews cache by URL. Regenerate from /og/docs.
+const DOCS_OG_IMAGE = {
+  url: "/opengraph-docs-v1.png",
+  width: 1200,
+  height: 630,
+  type: "image/png",
+  alt: "moodi docs: a thinking purple 3D ghost next to a React code snippet",
+};
 
 export const metadata: Metadata = {
-  title: "Docs",
-  description: "Install moodi and drop a tiny 3D mood buddy into any website: React, Web Component or CDN. Props, moods, events and the API.",
+  title: DOCS_TITLE,
+  description: DOCS_DESCRIPTION,
   alternates: { canonical: "/docs" },
+  openGraph: {
+    title: `moodi ${DOCS_TITLE.toLowerCase()}`,
+    description: DOCS_OG_DESCRIPTION,
+    url: "/docs",
+    siteName: SITE_NAME,
+    type: "article",
+    locale: "en_US",
+    images: [DOCS_OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `moodi ${DOCS_TITLE.toLowerCase()}`,
+    description: DOCS_OG_DESCRIPTION,
+    site: TWITTER_HANDLE,
+    creator: TWITTER_HANDLE,
+    images: [DOCS_OG_IMAGE],
+  },
 };
+
+const structuredData = [
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    headline: "moodi docs",
+    description: DOCS_DESCRIPTION,
+    url: `${SITE_URL}/docs`,
+    image: `${SITE_URL}${DOCS_OG_IMAGE.url}`,
+    proficiencyLevel: "Beginner",
+    about: { "@type": "SoftwareApplication", name: SITE_NAME, url: SITE_URL },
+    author: { "@type": "Person", name: AUTHOR.name, alternateName: `@${AUTHOR.handle}`, url: AUTHOR.url },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: SITE_NAME, item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: DOCS_TITLE, item: `${SITE_URL}/docs` },
+    ],
+  },
+];
 
 function Code({ children }: { children: string }) {
   return (
@@ -29,6 +81,7 @@ function H2({ id, children }: { id: string; children: string }) {
 export default function DocsPage() {
   return (
     <div className="min-h-dvh">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
       <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-line bg-bg/85 px-5 backdrop-blur">
         <Link href="/" className="flex items-center gap-1.5">
           <Moodi size={30} interactive={false} shadow={false} aria-hidden />

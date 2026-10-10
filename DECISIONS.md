@@ -57,7 +57,7 @@ Choices made where the spec left room, or where the owner changed it.
   `.github/assets/readme.png` from a real render (headless screenshot), not a drawing.
 - Domain: `getmoodi.dev`. Like roastfast, the `www.` host is canonical and the apex
   redirects to it (308). `NEXT_PUBLIC_SITE_URL=https://www.getmoodi.dev` on Vercel;
-  without it `SITE_URL` falls back to the Vercel production URL.
+  without it `SITE_URL` defaults to the same address.
 
 ## SEO and Vercel setup (mirrors roastfast)
 
@@ -75,3 +75,7 @@ Choices made where the spec left room, or where the owner changed it.
   production and preview. Unlike roastfast the app is not at the repo root: the repo is a
   pnpm monorepo (the npm package lives next to the site), so the project's root directory
   is `apps/site`.
+- Also shipped: `favicon.ico` (16/32/48), a web manifest with 192/512 and maskable icons,
+  `appleWebApp`, a docs-specific OG/Twitter card (`public/opengraph-docs-v1.png`, rendered
+  from `/og/docs`) with `TechArticle` + `BreadcrumbList` JSON-LD, `/llms.txt` and
+  `/.well-known/security.txt` (expires 2027-10-10, renew before then).

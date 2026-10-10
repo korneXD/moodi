@@ -1,0 +1,22 @@
+# moodi
+
+> Tiny 3D mood buddies for your UI. A soft 3D character (three.js) you drop into any website with one line; its face shows state: idle, thinking, loading, listening, speaking, happy, surprised, sad, error, sleeping, love.
+
+- Install: `npm i moodi three` (three.js is a peer dependency, React is optional)
+- React: `import { Moodi } from 'moodi/react'` then `<Moodi mood={isLoading ? 'loading' : 'idle'} />` (SSR-safe; three.js loads lazily in the browser)
+- Web Component: `<moodi-buddy mood="happy"></moodi-buddy>` plus `import 'moodi'`
+- CDN: `<script type="module" src="https://esm.sh/moodi"></script>`
+- Props: shape (ghost | pebble | blob | drop | bean | cube, default ghost), mood (default idle), color (default #6c5ce7), faceColor, cheekColor, size (default 160), speed (0 pauses), followCursor, interactive, shadow
+- Imperative: `el.mood = 'thinking'`, `el.react('happy', { duration: 1200 })`, `moodchange` event with `{ mood, previous, reaction }`
+- License: MIT. Author: @itsk0rn3l
+
+## Docs
+
+- [Docs](https://www.getmoodi.dev/docs): install, usage, props, moods, API
+- [Package README](https://github.com/korneXD/moodi/blob/main/packages/moodi/README.md)
+- [Playground](https://www.getmoodi.dev): pick a shape, mood and color, copy the code
+
+## Source
+
+- [GitHub](https://github.com/korneXD/moodi)
+- [npm](https://www.npmjs.com/package/moodi)

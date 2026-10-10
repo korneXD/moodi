@@ -1,9 +1,4 @@
-export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "http://localhost:3000")
-).replace(/\/$/, "");
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.getmoodi.dev").replace(/\/$/, "");
 export const SITE_NAME = "moodi";
 export const SITE_TITLE = "moodi – 3D mood buddies";
 /** The meta description (search results): 150 characters at most. */

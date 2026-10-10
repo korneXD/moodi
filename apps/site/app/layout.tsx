@@ -45,6 +45,8 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 } },
   openGraph: { title: SITE_TITLE, description: SITE_OG_DESCRIPTION, url: "/", siteName: SITE_NAME, type: "website", locale: "en_US", images: [OG_IMAGE] },
   twitter: { card: "summary_large_image", title: SITE_TITLE, description: SITE_OG_DESCRIPTION, site: TWITTER_HANDLE, creator: TWITTER_HANDLE, images: [OG_IMAGE] },
+  appleWebApp: { title: SITE_NAME, statusBarStyle: "black-translucent" },
+  formatDetection: { telephone: false },
 };
 
 export const viewport: Viewport = { themeColor: "#0c0b0a" };
