@@ -91,6 +91,7 @@ export default function DocsPage() {
         </Link>
         <nav className="flex items-center gap-4 text-[13px] text-muted">
           <Link href="/" className="hover:text-fg">Playground</Link>
+          <Link href="/test" className="hover:text-fg">Test</Link>
           <a href={GITHUB_URL} className="hover:text-fg">GitHub</a>
         </nav>
       </header>

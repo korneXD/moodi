@@ -15,6 +15,7 @@
 - [Docs](https://www.getmoodi.dev/docs): install, usage, props, moods, API
 - [Package README](https://github.com/korneXD/moodi/blob/main/packages/moodi/README.md)
 - [Playground](https://www.getmoodi.dev): pick a shape, mood and color, copy the code
+- [Test and live example](https://www.getmoodi.dev/test): every shape loaded three ways, and moodi driving a real UI (mood picker, chat, waitlist form)
 
 ## Source
 

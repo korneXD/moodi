@@ -137,3 +137,19 @@ so AI crawlers (GPTBot, ClaudeBot, …) show up in DataFast's Bot traffic card. 
 skips `/api`, `_next` assets and the favicon but keeps `robots.txt`, `llms.txt` and
 `sitemap.xml`. Token auth is wired (`DATAFAST_BOT_TOKEN`) but optional; without the env var
 the call simply sends no token.
+
+## /test page
+
+Ported from the owner's local `testmoodi` (Vite) playground and translated to English, as
+two tabs on one page (`#test`, `#example`):
+
+- **Test:** all six shapes, each loaded a different way: the React component, the Web
+  Component (`import 'moodi'`) and the esm.sh CDN build registered as `<moodi-cdn>` (so it
+  can't be confused with the npm copy). A badge turns green on the element's `ready` event;
+  per-row sound toggles drive the `sound` attribute, only while the row is 60% in view.
+- **Live example:** "Hush", a made-up journaling app whose landing page uses moodi for real
+  UI state: a mood picker, a chat (listening → thinking → speaking) and a waitlist form
+  (error / loading / success). It keeps its own light look and a Young Serif display face.
+
+Styles are scoped under `.tp` (`app/test/test.css`) and use the site's theme tokens. The CSP
+allows `https://esm.sh` for the CDN row.

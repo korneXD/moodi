@@ -410,6 +410,9 @@ function Header({ state }: { state: PlaygroundState }) {
         >
           <GitHubIcon />
         </a>
+        <Link href="/test" className="press hidden h-8 items-center rounded-lg px-2 text-[13px] text-muted hover:text-fg sm:flex">
+          Test
+        </Link>
         <Link href="/docs" className="press hidden h-8 items-center rounded-lg px-2 text-[13px] text-muted hover:text-fg sm:flex">
           Docs
         </Link>
