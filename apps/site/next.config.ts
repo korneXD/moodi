@@ -1,14 +1,15 @@
 import type { NextConfig } from "next";
 
-// Next.js hydrates with inline scripts and styles, so those stay allowed; everything else is pinned to this site.
+// Next.js hydrates with inline scripts and styles, so those stay allowed; everything else is pinned to this site
+// and the DataFast analytics script.
 // three.js needs no eval. Dev mode needs eval for hot reloading.
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline' https://datafa.st${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self' data:",
-  "connect-src 'self'",
+  "connect-src 'self' https://datafa.st",
   "worker-src 'self' blob:",
   "object-src 'none'",
   "base-uri 'self'",

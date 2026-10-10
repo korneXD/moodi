@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import { AUTHOR, SITE_DESCRIPTION, SITE_NAME, SITE_OG_DESCRIPTION, SITE_TITLE, SITE_URL, TWITTER_HANDLE } from "@/lib/site";
 import "./globals.css";
 
@@ -64,6 +65,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <Script
+          data-website-id="dfid_pssJNAwHn9MWijVTh8hCV"
+          data-domain="getmoodi.dev"
+          src="https://datafa.st/js/script.js"
+          strategy="afterInteractive"
+        />
       </head>
       <body>{children}</body>
     </html>
