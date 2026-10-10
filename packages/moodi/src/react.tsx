@@ -12,23 +12,48 @@ import type { MoodiBuddyElement } from './element';
 export * from './core/constants';
 export type { MoodiBuddyElement };
 
+export type MoodiLoading = 'idle' | 'interaction' | 'eager';
+
 export interface MoodiReactProps
   extends MoodiProps,
     Omit<HTMLAttributes<HTMLElement>, keyof MoodiProps | 'children'> {
   onMoodChange?: (detail: MoodChangeDetail) => void;
+  /** Fires once the first 3D frame is on screen. */
+  onReady?: () => void;
+  /**
+   * Image shown until the first 3D frame (and while three.js loads). A pre-rendered
+   * still of the same buddy makes the swap invisible.
+   */
+  poster?: string;
+  /**
+   * When to load three.js: `'idle'` (default) after the page settles, `'interaction'`
+   * on the first pointer, touch, key or scroll (pair it with `poster`), `'eager'` now.
+   */
+  loading?: MoodiLoading;
 }
 
-let loading: Promise<unknown> | null = null;
-const idle = () =>
-  new Promise<void>((resolve) => {
-    if (typeof requestIdleCallback === 'function') requestIdleCallback(() => resolve(), { timeout: 1200 });
-    else setTimeout(resolve, 1);
-  });
-/**
- * Loads three.js and registers the element, in the browser only. Waits for an idle
- * moment first so the page paints and hydrates before the 3D work starts.
- */
-export const loadMoodi = () => (loading ??= idle().then(() => import('moodi')).then((m) => m.defineMoodi()));
+let started: Promise<unknown> | null = null;
+let waiting = false;
+
+/** Loads three.js and registers the element. Browser only; safe to call many times. */
+export const loadMoodi = () => (started ??= import('moodi').then((m) => m.defineMoodi()));
+
+function schedule(mode: MoodiLoading) {
+  if (started || mode === 'eager') return void loadMoodi();
+  if (mode === 'idle') {
+    if (typeof requestIdleCallback === 'function') requestIdleCallback(() => loadMoodi(), { timeout: 1200 });
+    else setTimeout(loadMoodi, 1);
+    return;
+  }
+  if (waiting) return;
+  waiting = true;
+  const events = ['pointermove', 'pointerdown', 'touchstart', 'keydown', 'wheel', 'scroll'] as const;
+  const go = () => {
+    events.forEach((e) => removeEventListener(e, go));
+    loadMoodi();
+  };
+  events.forEach((e) => addEventListener(e, go, { passive: true, once: true }));
+}
 
 const flag = (v: boolean | undefined) => (v === undefined ? undefined : String(v));
 const cssSize = (v: number | string | undefined) =>
@@ -51,6 +76,9 @@ export const Moodi = forwardRef<MoodiBuddyElement | null, MoodiReactProps>(funct
     interactive,
     shadow,
     onMoodChange,
+    onReady,
+    poster,
+    loading = 'idle',
     className,
     style,
     ...rest
@@ -61,8 +89,16 @@ export const Moodi = forwardRef<MoodiBuddyElement | null, MoodiReactProps>(funct
   useImperativeHandle(ref, () => el.current!, []);
 
   useEffect(() => {
-    loadMoodi();
-  }, []);
+    schedule(loading);
+  }, [loading]);
+
+  useEffect(() => {
+    const node = el.current;
+    if (!node || !onReady) return;
+    if (node.hasAttribute('ready')) return void onReady();
+    node.addEventListener('ready', onReady, { once: true });
+    return () => node.removeEventListener('ready', onReady);
+  }, [onReady]);
 
   useEffect(() => {
     const node = el.current;
@@ -71,6 +107,10 @@ export const Moodi = forwardRef<MoodiBuddyElement | null, MoodiReactProps>(funct
     node.addEventListener('moodchange', h);
     return () => node.removeEventListener('moodchange', h);
   }, [onMoodChange]);
+
+  const still = poster
+    ? createElement('img', { src: poster, alt: '', 'aria-hidden': true, decoding: 'async', draggable: false, style: { display: 'block', width: '100%', height: '100%', objectFit: 'contain' } })
+    : null;
 
   return createElement('moodi-buddy', {
     ref: el,
@@ -89,5 +129,5 @@ export const Moodi = forwardRef<MoodiBuddyElement | null, MoodiReactProps>(funct
     style: { display: 'inline-block', width: cssSize(size), height: cssSize(size), verticalAlign: 'middle', ...style },
     suppressHydrationWarning: true,
     ...rest,
-  });
+  }, still);
 });

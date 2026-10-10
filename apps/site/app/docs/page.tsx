@@ -85,7 +85,7 @@ export default function DocsPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
       <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-line bg-bg/85 px-5 backdrop-blur">
         <Link href="/" className="flex items-center gap-1.5">
-          <Moodi size={30} interactive={false} shadow={false} aria-hidden />
+          <Moodi size={30} loading="interaction" poster="/posters/logo.webp" interactive={false} shadow={false} aria-hidden />
           <span className="text-[17px] font-semibold tracking-[-0.03em]">moodi</span>
           <span className="ml-2 text-[13px] text-muted">docs</span>
         </Link>
@@ -97,7 +97,7 @@ export default function DocsPage() {
 
       <main className="mx-auto max-w-[760px] px-5 pb-24 pt-12">
         <div className="flex items-center gap-5">
-          <Moodi mood="happy" size={96} />
+          <Moodi mood="happy" size={96} loading="interaction" poster="/posters/mood-happy.webp" />
           <div>
             <h1 className="text-[32px] font-semibold leading-tight tracking-[-0.03em]">moodi</h1>
             <p className="mt-1 text-[15px] text-muted">Tiny 3D mood buddies for your UI.</p>

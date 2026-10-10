@@ -79,3 +79,27 @@ Choices made where the spec left room, or where the owner changed it.
   `appleWebApp`, a docs-specific OG/Twitter card (`public/opengraph-docs-v1.png`, rendered
   from `/og/docs`) with `TechArticle` + `BreadcrumbList` JSON-LD, `/llms.txt` and
   `/.well-known/security.txt` (expires 2027-10-10, renew before then).
+
+## Performance on phones and GPU-less machines
+
+PageSpeed runs WebGL in software, where continuous 3D rendering blocked the main thread
+for ~26 s on mobile. Fixes:
+
+- **Facade:** the site loads three.js on the first pointer, touch, key or scroll
+  (`loading="interaction"`). Until then every buddy shows a WebP still captured from the
+  live render (`public/posters`, 25 kB total), so the swap is invisible and the hero still
+  is the LCP image (preloaded, `fetchPriority: high`). The stills only show for the
+  default look; once anything changes, three.js is already loading.
+- **Library:** `poster` / `loading` / `onReady` props, a `ready` event and `[ready]`
+  attribute; light-DOM children of `<moodi-buddy>` act as the poster. Software WebGL is
+  detected from the renderer string and drops to on-change frames at 1× pixels. The frame
+  loop is time-sliced (10 ms budget, round-robin), and each buddy lowers its own pixel
+  density when frames stay expensive.
+- Result in Lighthouse with software GL: mobile 95–96, desktop 100, CLS 0.
+
+## Intro
+
+The stage leads with the product sentence (the page's `h1`: "A tiny 3D character that
+shows your UI's state.") and an **Install moodi** button that copies `npm i moodi three`,
+plus a Docs link, so the first screen says what moodi is and what to do next on every
+size. The mood name below the character is now an `h2`.

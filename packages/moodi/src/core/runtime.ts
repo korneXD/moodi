@@ -17,7 +17,11 @@ let listening = false;
 let program: 'idle' | 'compiling' | 'ready' = 'idle';
 
 export const pointer = { x: 0, y: 0, lastMove: -1e9, known: false };
-export const env = { reducedMotion: false };
+export const env = {
+  reducedMotion: false,
+  /** software rasterizer (SwiftShader, llvmpipe…): no continuous animation */
+  lowPower: false,
+};
 
 function listen() {
   if (listening) return;
@@ -53,6 +57,7 @@ export function sharedRenderer(w: number, h: number): WebGLRenderer {
     });
     renderer.setPixelRatio(1);
     renderer.setClearColor(0x000000, 0);
+    env.lowPower = isSoftwareGL(renderer.getContext());
     renderer.setScissorTest(true);
     renderer.domElement.addEventListener('webglcontextlost', (e) => {
       e.preventDefault();
@@ -71,6 +76,16 @@ export function sharedRenderer(w: number, h: number): WebGLRenderer {
 }
 
 export const bufferHeight = () => bufH;
+
+function isSoftwareGL(gl: WebGLRenderingContext | WebGL2RenderingContext): boolean {
+  try {
+    const ext = gl.getExtension('WEBGL_debug_renderer_info');
+    const name = String(gl.getParameter(ext ? ext.UNMASKED_RENDERER_WEBGL : gl.RENDERER));
+    return /swiftshader|llvmpipe|softpipe|software|basic render/i.test(name);
+  } catch {
+    return false;
+  }
+}
 
 /**
  * Every buddy shares one shader program. Compile it once, off the main thread

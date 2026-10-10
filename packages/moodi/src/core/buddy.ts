@@ -81,6 +81,8 @@ export class Buddy implements Tickable {
 
   state: BuddyState = { ...DEFAULTS };
   onMoodChange?: (d: MoodChangeDetail) => void;
+  /** fires once, after the first frame is on the canvas */
+  onReady?: () => void;
 
   private visible = false;
   private connected = false;
@@ -139,6 +141,7 @@ export class Buddy implements Tickable {
   // adaptive resolution: drop pixel density when frames are expensive (software GL, weak GPUs)
   private css: [number, number] = [0, 0];
   private quality = 1;
+  private lowPowerApplied = false;
   private cost = 0;
   private costFrames = 0;
   private lastFrame: number[] = [];
@@ -255,7 +258,7 @@ outgoingLight = mix(outgoingLight, diffuseColor.rgb * 1.12, emis * 0.65);
 
   resize(cssW: number, cssH: number) {
     this.css = [cssW, cssH];
-    const dpr = Math.min(2, devicePixelRatio || 1) * this.quality;
+    const dpr = (env.lowPower ? 1 : Math.min(2, devicePixelRatio || 1)) * this.quality;
     const w = Math.max(1, Math.round(cssW * dpr));
     const h = Math.max(1, Math.round(cssH * dpr));
     if (w === this.w && h === this.h) return;
@@ -334,7 +337,8 @@ outgoingLight = mix(outgoingLight, diffuseColor.rgb * 1.12, emis * 0.65);
   tick(dt: number, now: number) {
     const s = this.state;
     const reduced = env.reducedMotion;
-    const da = dt * Math.max(0, s.speed);
+    // software WebGL can't keep up with continuous animation: only transitions render there
+    const da = env.lowPower ? 0 : dt * Math.max(0, s.speed);
     this.t += da;
     this.tau += da;
     this.prevTau += da;
@@ -453,10 +457,14 @@ outgoingLight = mix(outgoingLight, diffuseColor.rgb * 1.12, emis * 0.65);
 
     const faceChanged = this.drawFaceIfNeeded();
     // paused and nothing moved: keep the last frame
-    if (s.speed === 0 && !faceChanged && !this.needsFrame && this.settled()) return;
+    if ((s.speed === 0 || env.lowPower) && !faceChanged && !this.needsFrame && this.settled()) return;
     const t0 = performance.now();
     if (this.render(p)) {
       this.needsFrame = false;
+      if (this.onReady) {
+        this.onReady();
+        this.onReady = undefined;
+      }
       this.adapt(performance.now() - t0);
     }
   }
@@ -555,6 +563,14 @@ outgoingLight = mix(outgoingLight, diffuseColor.rgb * 1.12, emis * 0.65);
   private render(p: Pose): boolean {
     const { w, h, ctx } = this;
     const r = sharedRenderer(w, h);
+    if (env.lowPower && !this.lowPowerApplied) {
+      // detected on renderer creation: drop to 1x pixels before the first real frame
+      this.lowPowerApplied = true;
+      const [cw, ch] = this.css;
+      this.w = this.h = 0;
+      this.resize(cw, ch);
+      return false;
+    }
     if (!programReady(this.scene, this.camera)) return false;
     ctx.clearRect(0, 0, w, h);
     this.group.updateMatrixWorld();

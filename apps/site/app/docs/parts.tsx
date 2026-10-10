@@ -51,7 +51,16 @@ export function MoodList() {
     <ul className="grid grid-cols-2 gap-x-6 gap-y-1 sm:grid-cols-3">
       {MOODS.map((m) => (
         <li key={m} className="flex items-center gap-2 py-1">
-          <Moodi mood={m} size={40} interactive={false} shadow={false} followCursor={false} aria-hidden />
+          <Moodi
+            mood={m}
+            size={40}
+            loading="interaction"
+            poster={`/posters/mood-${m}.webp`}
+            interactive={false}
+            shadow={false}
+            followCursor={false}
+            aria-hidden
+          />
           <div>
             <div className="font-mono text-[12.5px]">{m}</div>
             <div className="text-[12.5px] text-muted">{MOOD_INFO[m].description}</div>

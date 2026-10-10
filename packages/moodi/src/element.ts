@@ -22,7 +22,10 @@ const cssSize = (v: string | number | null | undefined) => {
 
 const STYLE = `:host{display:inline-block;position:relative;cursor:pointer;width:var(--moodi-size);height:var(--moodi-size);vertical-align:middle;contain:layout paint style;-webkit-tap-highlight-color:transparent}
 :host([interactive="false"]){pointer-events:none}
-canvas{display:block;width:100%;height:100%}`;
+canvas{position:absolute;inset:0;display:block;width:100%;height:100%}
+slot{display:block;width:100%;height:100%}
+::slotted(img){display:block;width:100%;height:100%;object-fit:contain}
+:host([ready]) slot{display:none}`;
 
 // SSR-safe: on the server there is no HTMLElement, so extend a dummy class.
 const Base = (typeof HTMLElement === 'undefined' ? class {} : HTMLElement) as typeof HTMLElement;
@@ -51,6 +54,10 @@ export class MoodiBuddyElement extends Base {
       b.onMoodChange = (detail) => {
         this.syncLabel(detail.mood);
         this.dispatchEvent(new CustomEvent<MoodChangeDetail>('moodchange', { detail, bubbles: true }));
+      };
+      b.onReady = () => {
+        this.setAttribute('ready', '');
+        this.dispatchEvent(new Event('ready'));
       };
       this.root.append(b.canvas);
       b.update(this.readState());

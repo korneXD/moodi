@@ -39,6 +39,19 @@ import { Moodi } from 'moodi/react';
 `moodi/react` is SSR-safe (Next.js, Remix, …): three.js is loaded lazily in the
 browser, so nothing WebGL-related runs on the server.
 
+React-only props:
+
+| Prop           | Type                                   | Default  | Notes                                                                 |
+| -------------- | -------------------------------------- | -------- | --------------------------------------------------------------------- |
+| `poster`       | `string`                               | —        | Image shown until the first 3D frame (e.g. a still of the same buddy) |
+| `loading`      | `'idle' \| 'interaction' \| 'eager'`    | `'idle'` | When to load three.js; `'interaction'` waits for the first pointer, touch, key or scroll |
+| `onMoodChange` | `(detail) => void`                     | —        | Same as the `moodchange` event                                        |
+| `onReady`      | `() => void`                           | —        | First 3D frame is on screen                                           |
+
+`poster` + `loading="interaction"` keeps three.js out of the critical path entirely: the
+page paints the still instantly and the live buddy takes over on the first interaction.
+With the Web Component, put an `<img>` inside `<moodi-buddy>`; it shows until the first frame.
+
 ### CDN, no build step
 
 ```html
@@ -74,6 +87,7 @@ const el = document.querySelector('moodi-buddy');
 el.mood = 'thinking';
 el.react('happy', { duration: 1200 }); // temporary reaction, then back to the current mood
 el.addEventListener('moodchange', (e) => console.log(e.detail)); // { mood, previous, reaction }
+el.addEventListener('ready', () => {}); // first frame rendered; the element also gets a [ready] attribute
 ```
 
 In React, pass a `ref` (it points at the element) or use `onMoodChange`.
@@ -85,6 +99,7 @@ Also exported: `SHAPES`, `MOODS`, `PALETTES`, `MOOD_INFO`, `DEFAULTS`, `defineMo
 - All buddies on a page share **one WebGL context**; dozens are fine.
 - Rendering stops while a buddy is off-screen or the tab is hidden; paused buddies (`speed={0}`) only redraw when something changes.
 - `prefers-reduced-motion`: only blinking and soft fades.
+- Software WebGL (SwiftShader, llvmpipe): no continuous animation, frames only on change, 1× pixels.
 - Transparent background, pixel ratio capped at 2.
 - `role="img"` and `aria-label="moodi: <mood>"` (set your own `aria-label` to override).
 - ~11 kB gzip, three.js excluded.

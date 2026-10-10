@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { preload } from "react-dom";
 import {
   Moodi,
   MOOD_INFO,
@@ -32,6 +33,14 @@ const CHEEKS = [
 ];
 
 const SLEEP_AFTER = 20_000;
+const HERO_POSTER = "/posters/hero.webp";
+
+/**
+ * three.js loads on the first pointer, touch, key or scroll. Until then each buddy shows
+ * a still rendered from the default look (public/posters), so the page paints instantly.
+ */
+const LOADING = "interaction" as const;
+const isPristine = (s: PlaygroundState) => s.color === INITIAL.color && !s.faceColor && !s.cheekColor;
 
 /** The hero stays big; `size` scales it within the stage (and shows up in the code). */
 const stageScale = (size: number) => Math.min(1, Math.max(0.3, size / 220)).toFixed(3);
@@ -71,6 +80,8 @@ export function Playground() {
   }, []);
 
   const shownMood: Mood = sleepy ? "sleeping" : state.mood;
+  const pristine = isPristine(state);
+  preload(HERO_POSTER, { as: "image", fetchPriority: "high" });
   const paletteName = BODY.find((b) => b.color === state.color)?.name ?? state.color;
 
   return (
@@ -93,17 +104,19 @@ export function Playground() {
             moodi={{ shape, mood: "idle", followCursor: state.followCursor }}
             state={state}
             size={46}
+            poster={pristine ? `/posters/shape-${shape}.webp` : undefined}
           />
         ))}
       </nav>
 
       {/* stage */}
-      <main className="area-stage relative flex min-h-0 flex-col items-center justify-center overflow-hidden compact:min-h-[440px] compact:py-6">
-        <div
-          aria-hidden
-          className="stage-glow pointer-events-none absolute left-1/2 top-[48%] aspect-square w-[min(84%,_68dvh)] -translate-x-1/2 -translate-y-1/2"
-        />
+      <main className="area-stage relative flex min-h-0 flex-col items-center justify-center gap-4 overflow-hidden px-4 compact:py-6">
+        <Intro />
         <div className="relative flex flex-col items-center">
+          <div
+            aria-hidden
+            className="stage-glow pointer-events-none absolute left-1/2 top-[44%] aspect-square w-[min(170%,_68dvh)] -translate-x-1/2 -translate-y-1/2 compact:w-[150%]"
+          />
           <Moodi
             ref={stage}
             shape={state.shape}
@@ -113,8 +126,10 @@ export function Playground() {
             cheekColor={state.cheekColor}
             speed={state.speed}
             followCursor={state.followCursor}
-            size={`calc(min(60dvh, 40vw, 520px) * ${stageScale(state.size)})`}
-            className="stage-buddy compact:!h-[min(78vw,360px)] compact:!w-[min(78vw,360px)]"
+            size={`calc(min(52dvh, 40vw, 480px) * ${stageScale(state.size)})`}
+            loading={LOADING}
+            poster={pristine && state.shape === "ghost" && shownMood === "idle" ? HERO_POSTER : undefined}
+            className="stage-buddy compact:!h-[min(72vw,340px)] compact:!w-[min(72vw,340px)]"
           />
           <MoodLabel mood={shownMood} />
         </div>
@@ -207,6 +222,7 @@ export function Playground() {
               moodi={{ shape: state.shape, mood, followCursor: false }}
               state={state}
               size={44}
+              poster={pristine && state.shape === "ghost" ? `/posters/mood-${mood}.webp` : undefined}
             />
           ))}
         </div>
@@ -228,7 +244,9 @@ function Thumb({
   moodi,
   state,
   size,
+  poster,
 }: {
+  poster?: string;
   index: number;
   active: boolean;
   label: string;
@@ -256,6 +274,8 @@ function Thumb({
       >
         <Moodi
           {...moodi}
+          loading={LOADING}
+          poster={poster}
           color={state.color}
           faceColor={state.faceColor}
           cheekColor={state.cheekColor}
@@ -268,6 +288,40 @@ function Thumb({
       </span>
       <span className={`text-[11px] ${active ? "text-fg" : "text-muted group-hover:text-fg"}`}>{label}</span>
     </button>
+  );
+}
+
+const INSTALL = "npm i moodi three";
+
+/** What moodi is, and the one obvious next step. */
+function Intro() {
+  const [copied, copy] = useCopy();
+  return (
+    <div className="enter relative z-10 flex flex-col items-center text-center" style={{ ["--i" as string]: 1.5 }}>
+      <h1 className="max-w-[26ch] text-[22px] font-semibold leading-[1.2] tracking-[-0.025em] text-balance sm:text-[24px]">
+        A tiny 3D character that shows your UI&rsquo;s state.
+      </h1>
+      <div className="mt-3.5 flex flex-wrap items-center justify-center gap-2">
+        <button
+          type="button"
+          onClick={() => copy(INSTALL)}
+          aria-label={copied ? `Copied: ${INSTALL}` : `Install moodi: copy ${INSTALL}`}
+          className="press flex h-9 items-center gap-2.5 rounded-lg bg-fg pl-4 pr-3 text-[14px] font-medium text-bg hover:opacity-90"
+        >
+          Install moodi
+          <span className="flex items-center gap-1.5 border-l border-bg/20 pl-2.5 font-mono text-[12px] font-normal opacity-70">
+            {copied ? "Copied" : INSTALL}
+            {copied ? <CheckIcon width={13} height={13} /> : <CopyIcon width={13} height={13} />}
+          </span>
+        </button>
+        <Link
+          href="/docs"
+          className="press flex h-9 items-center rounded-lg px-3.5 text-[14px] text-muted hover:bg-chip hover:text-fg"
+        >
+          Docs
+        </Link>
+      </div>
+    </div>
   );
 }
 
@@ -289,7 +343,7 @@ function MoodLabel({ mood }: { mood: Mood }) {
             className={`absolute inset-x-0 top-0 ${current ? (it.key ? "swap-in" : "") : "swap-out"}`}
             aria-hidden={!current}
           >
-            <h1 className="text-[26px] font-semibold leading-tight tracking-[-0.02em]">{MOOD_INFO[it.mood].label}</h1>
+            <h2 className="text-[24px] font-semibold leading-tight tracking-[-0.02em]">{MOOD_INFO[it.mood].label}</h2>
             <p className="mt-1 text-[14px] text-muted">{MOOD_INFO[it.mood].description}</p>
           </div>
         );
@@ -325,6 +379,8 @@ function Header({ state }: { state: PlaygroundState }) {
           faceColor={state.faceColor}
           cheekColor={state.cheekColor}
           size={30}
+          loading={LOADING}
+          poster={isPristine(state) && state.shape === "ghost" ? "/posters/logo.webp" : undefined}
           interactive={false}
           shadow={false}
           aria-hidden
