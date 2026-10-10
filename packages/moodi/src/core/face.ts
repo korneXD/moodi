@@ -147,8 +147,12 @@ export function drawFace(
   /** 0..1, light eyes glow more than dark ones */
   glow: number,
   glowCenter: string,
-  /** light eyes get a dark pupil; dark eyes just a white catchlight */
-  pupil: string | null,
+  /** catchlight dot: white in dark eyes, dark in light eyes */
+  dot: string,
+  /** inside of an open mouth */
+  inner: string,
+  /** far end of the mouth gradient (a blush-tinted face color) */
+  mouthEdge: string,
 ) {
   const S = ctx.canvas.width;
   ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -240,29 +244,15 @@ export function drawFace(
       ctx.fill();
       ctx.shadowBlur = 0;
       ctx.fillStyle = faceColor;
-      if (pupil && open > 0.25) {
-        const k = Math.min(1, (open - 0.25) * 2.5);
-        // pupils roll toward the gaze inside the eye
+      if (open > 0.35) {
+        // one dot that rolls toward the gaze (and the cursor)
         const gx = Math.max(-1, Math.min(1, f.lookX));
         const gy = Math.max(-1, Math.min(1, f.lookY));
-        const px = cx + gx * rx * 0.46;
-        const py = cy + gy * ry * 0.34 + ry * 0.06;
-        ctx.globalAlpha = normal * k;
-        ctx.fillStyle = pupil;
+        const d = dot === '#fff' ? 0.3 : 0.34;
+        ctx.globalAlpha = normal * Math.min(1, (open - 0.35) * 3);
+        ctx.fillStyle = dot;
         ctx.beginPath();
-        ctx.ellipse(px, py, rx * 0.56, Math.min(ry * 0.66, rx * 0.72), 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#fff';
-        ctx.beginPath();
-        ctx.arc(px - rx * 0.2, py - rx * 0.22, rx * 0.17, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = faceColor;
-      } else if (open > 0.35) {
-        // catchlight
-        ctx.globalAlpha = normal * Math.min(1, (open - 0.35) * 3) * 0.95;
-        ctx.fillStyle = '#fff';
-        ctx.beginPath();
-        ctx.arc(cx - rx * 0.32 + f.lookX * rx * 0.3, cy - ry * 0.38 + f.lookY * ry * 0.2, rx * 0.3, 0, Math.PI * 2);
+        ctx.arc(cx - rx * 0.1 + gx * rx * 0.5, cy - ry * 0.16 + gy * ry * 0.42, rx * d, 0, Math.PI * 2);
         ctx.fill();
         ctx.fillStyle = faceColor;
       }
@@ -305,13 +295,42 @@ export function drawFace(
 
   ctx.shadowBlur = 0;
 
-  // mouth
+  // mouth: gradient line (bright → face color → blush tint); dark inside with a tongue when open
   const mx = lx * 0.6 + f.mouthSkew * 0.07;
   const my = MOUTH_Y + ly * 0.6;
   const round = Math.min(1, Math.max(0, f.mouthRound));
+  const w = f.mouthW;
+  const mg = ctx.createLinearGradient(mx - w - 0.02, my, mx + w + 0.02, my);
+  mg.addColorStop(0, mouthEdge);
+  mg.addColorStop(0.5, glowCenter);
+  mg.addColorStop(1, mouthEdge);
+  ctx.shadowColor = faceColor;
+  ctx.shadowBlur = S * 0.02 * glow;
+
+  const openShape = (path: Path2D, open: number, tongueY: number, tongueW: number) => {
+    ctx.fillStyle = inner;
+    ctx.fill(path);
+    ctx.shadowBlur = 0;
+    if (open > 0.02) {
+      ctx.save();
+      ctx.clip(path);
+      ctx.fillStyle = cheekColor;
+      ctx.globalAlpha *= Math.min(1, (open - 0.02) * 12);
+      ctx.beginPath();
+      ctx.ellipse(mx, tongueY, tongueW, open * 0.55, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+    ctx.strokeStyle = mg;
+    const lw = ctx.lineWidth;
+    ctx.lineWidth = lw * 0.6;
+    ctx.stroke(path);
+    ctx.lineWidth = lw;
+    ctx.shadowBlur = S * 0.02 * glow;
+  };
+
   if (round < 0.99) {
     ctx.globalAlpha = 1 - round;
-    const w = f.mouthW;
     const N = 18;
     const curveAt = (u: number) => f.mouthCurve * 0.075 * (1 - u * u);
     const pt = (i: number, open: number) => {
@@ -326,28 +345,33 @@ export function drawFace(
       return [x, y] as const;
     };
     const open = Math.max(0, f.mouthOpen);
-    ctx.beginPath();
+    const path = new Path2D();
     for (let i = 0; i <= N; i++) {
       const [x, y] = pt(i, -open * 0.15);
-      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+      i ? path.lineTo(x, y) : path.moveTo(x, y);
     }
     if (open > 0.003) {
       for (let i = N; i >= 0; i--) {
         const [x, y] = pt(i, open);
-        ctx.lineTo(x, y);
+        path.lineTo(x, y);
       }
-      ctx.closePath();
-      ctx.fill();
+      path.closePath();
+      openShape(path, open, pt(N / 2, open)[1], w * 0.55);
+    } else {
+      ctx.strokeStyle = mg;
+      ctx.stroke(path);
     }
-    ctx.stroke();
   }
   if (round > 0.01) {
     ctx.globalAlpha = round;
     const r = Math.max(0.02, f.mouthOpen * 0.55 + 0.01);
-    ctx.beginPath();
-    ctx.ellipse(mx, my + 0.01, r * 0.85, r, 0, 0, Math.PI * 2);
-    ctx.fill();
+    const path = new Path2D();
+    path.ellipse(mx, my + 0.01, r * 0.85, r, 0, 0, Math.PI * 2);
+    ctx.lineWidth = LINE * 0.8;
+    openShape(path, f.mouthOpen, my + 0.01 + r * 0.8, r * 0.6);
+    ctx.lineWidth = LINE;
   }
+  ctx.shadowBlur = 0;
   ctx.globalAlpha = 1;
 }
 

@@ -539,7 +539,9 @@ outgoingLight = mix(outgoingLight, diffuseColor.rgb * 1.12, emis * 0.65);
       toCss(this.cheek),
       light ? 1 : 0.3,
       toCss(mix(this.faceC, [1, 1, 1], light ? 0.6 : 0.16)),
-      light ? toCss(mix(this.body, [0.04, 0.03, 0.06], 0.86)) : null,
+      light ? toCss(mix(this.body, [0.04, 0.03, 0.06], 0.86)) : '#fff',
+      toCss(light ? mix(this.body, [0.03, 0.02, 0.05], 0.78) : mix(this.faceC, [0, 0, 0], 0.35)),
+      toCss(mix(this.faceC, this.cheek, 0.65)),
     );
     this.faceTex.needsUpdate = true;
     return true;
