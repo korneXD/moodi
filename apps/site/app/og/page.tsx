@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Moodi } from "moodi/react";
 
-export const metadata: Metadata = { title: "moodi og", robots: { index: false } };
+export const metadata: Metadata = { title: "OG card", robots: { index: false } };
 
 /**
- * 1200×630 composition used to (re)generate app/opengraph-image.png:
+ * 1200×630 composition used to (re)generate public/opengraph-v<N>.png (bump N in app/layout.tsx):
  * screenshot this page with a headless browser at that viewport.
  */
 export default function OgCard() {

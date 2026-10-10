@@ -5,8 +5,9 @@ import { MoodList, Palettes, PropsTable, ShapeNames } from "./parts";
 import { GITHUB_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Docs — moodi",
-  description: "Install moodi and drop a tiny 3D mood buddy into any website. Props, moods, events and the imperative API.",
+  title: "Docs",
+  description: "Install moodi and drop a tiny 3D mood buddy into any website: React, Web Component or CDN. Props, moods, events and the API.",
+  alternates: { canonical: "/docs" },
 };
 
 function Code({ children }: { children: string }) {

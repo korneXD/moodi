@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Moodi } from "moodi/react";
 
-export const metadata: Metadata = { title: "moodi readme", robots: { index: false } };
+export const metadata: Metadata = { title: "README banner", robots: { index: false } };
 
 /** README banner (.github/assets/readme.png): thinking, black face. Screenshot at 1200×630. */
 export default function ReadmeCard() {

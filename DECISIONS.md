@@ -55,3 +55,20 @@ Choices made where the spec left room, or where the owner changed it.
   `icon.png` and `apple-icon.png` from a real render (headless screenshot), not a drawing.
 - Domain: `moodi.dev` is not registered yet; `SITE_URL` falls back to the Vercel
   production URL.
+
+## SEO and Vercel setup (mirrors roastfast)
+
+- `lib/site.ts` holds `SITE_URL` (from `NEXT_PUBLIC_SITE_URL`), name, title, a ≤150-char meta
+  description, a ≤120-char OG description, the X handle and `jsonLd()`.
+- Root metadata: title template `%s | moodi`, keywords, category, author/creator, robots with
+  `max-image-preview: large`, Open Graph + Twitter `summary_large_image` with a versioned
+  image (`public/opengraph-v1.png`; bump the number whenever the picture changes, link
+  previews cache by URL). Pages set `alternates.canonical`.
+- `robots.ts` (disallows `/lab` and `/og`), `sitemap.ts` (`/`, `/docs`), a
+  `SoftwareApplication` JSON-LD with the creator on the home page, a noindex 404.
+- `next.config.ts`: `poweredByHeader: false` and the same security headers (CSP pinned to
+  self, nosniff, frame DENY, referrer, permissions, HSTS).
+- Vercel project: Node 24.x, region iad1, skew protection, `NEXT_PUBLIC_SITE_URL` for
+  production and preview. Unlike roastfast the app is not at the repo root: the repo is a
+  pnpm monorepo (the npm package lives next to the site), so the project's root directory
+  is `apps/site`.

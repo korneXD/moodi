@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Moodi } from "moodi/react";
 
-export const metadata: Metadata = { title: "moodi icon", robots: { index: false } };
+export const metadata: Metadata = { title: "Icon", robots: { index: false } };
 
 /** 256×256 transparent source for app/icon.png and app/apple-icon.png. */
 export default function IconCard() {
