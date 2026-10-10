@@ -6,7 +6,7 @@ happy, error, sleeping.
 
 ![moodi](apps/site/app/opengraph-image.png)
 
-- **Playground:** <https://moodi-site.vercel.app>
+- **Playground:** <https://moodi-two-tau.vercel.app>
 - **Package docs:** [packages/moodi/README.md](packages/moodi/README.md)
 - by [@itsk0rn3l](https://x.com/itsk0rn3l)
 

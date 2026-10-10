@@ -9,7 +9,7 @@ textures, nothing to download besides three.js.
 
 ![moodi](https://raw.githubusercontent.com/korneXD/moodi/main/apps/site/app/opengraph-image.png)
 
-**Playground:** <https://moodi-site.vercel.app> · by [@itsk0rn3l](https://x.com/itsk0rn3l)
+**Playground:** <https://moodi-two-tau.vercel.app> · by [@itsk0rn3l](https://x.com/itsk0rn3l)
 
 ## Install
 
