@@ -10,6 +10,9 @@ importers:
 
   apps/site:
     dependencies:
+      '@datafast/ai-crawl':
+        specifier: ^1.0.9
+        version: 1.0.9
       moodi:
         specifier: workspace:*
         version: link:../../packages/moodi
@@ -213,6 +216,10 @@ packages:
     dependencies:
       '@babel/helper-string-parser': 7.29.7
       '@babel/helper-validator-identifier': 7.29.7
+
+  /@datafast/ai-crawl@1.0.9:
+    resolution: {integrity: sha512-S+EUH3l2jpJMXdaxTEtL84PTv1WiOsA61tSnI4Y8QT+NWDUHVFpNZtDiLiO7Nw+GtuK71XB5PzhxHgoDGI66hA==}
+    dev: false
 
   /@dimforge/rapier3d-compat@0.12.0:
     resolution: {integrity: sha512-uekIGetywIgopfD97oDL5PfeezkFpNhwlzlaEYNOA0N6ghdsOvh/HYjSMek5Q2O1PYvRSDFcqFVJl4r4ZBwOow==}

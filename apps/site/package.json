@@ -10,10 +10,11 @@
     "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
+    "@datafast/ai-crawl": "^1.0.9",
+    "moodi": "workspace:*",
     "next": "16.4.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "moodi": "workspace:*",
     "three": "^0.186.1"
   },
   "devDependencies": {

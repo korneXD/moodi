@@ -128,3 +128,12 @@ lives in a shadow `<style>` (`:host{width;height}`), so the element never touche
 attributes during construction or later; outside CSS still wins over `:host`. The poster
 `<slot>` is appended in the constructor too (it was missing, so posters vanished on upgrade
 instead of at the first frame).
+
+## DataFast bot traffic
+
+`apps/site/proxy.ts` (Next 16's renamed middleware) calls `trackAICrawlerRequest` from
+`@datafast/ai-crawl` on every page request, without awaiting it (`event.waitUntil` inside),
+so AI crawlers (GPTBot, ClaudeBot, …) show up in DataFast's Bot traffic card. The matcher
+skips `/api`, `_next` assets and the favicon but keeps `robots.txt`, `llms.txt` and
+`sitemap.xml`. Token auth is wired (`DATAFAST_BOT_TOKEN`) but optional; without the env var
+the call simply sends no token.
