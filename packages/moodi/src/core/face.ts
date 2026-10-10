@@ -170,8 +170,8 @@ export function drawFace(
     ctx.save();
     if ('filter' in ctx) ctx.filter = `blur(${blur}px)`;
     for (const side of [-1, 1]) {
-      const cx = side * 0.52 + lx * 0.4;
-      const cy = 0.16 + ly * 0.4;
+      const cx = side * 0.52 + lx;
+      const cy = 0.16 + ly;
       const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, 0.16);
       g.addColorStop(0, cheekColor);
       g.addColorStop(1, 'rgba(0,0,0,0)');
@@ -190,8 +190,8 @@ export function drawFace(
       ctx.lineWidth = 0.016;
       ctx.lineCap = 'round';
       for (const side of [-1, 1]) {
-        const cx = side * 0.52 + lx * 0.4;
-        const cy = 0.16 + ly * 0.4;
+        const cx = side * 0.52 + lx;
+        const cy = 0.16 + ly;
         for (let i = -1; i <= 1; i++) {
           const x = cx + i * 0.045;
           ctx.beginPath();
@@ -232,9 +232,9 @@ export function drawFace(
         ctx.rotate(-side * f.lidTilt * 0.6);
         ctx.translate(-cx, -lidY);
       }
-      // soft halo + a gradient that is a touch brighter in the middle
-      ctx.shadowColor = faceColor;
-      ctx.shadowBlur = S * 0.035 * glow;
+      // soft halo (a drawn gradient, not shadowBlur: WebKit misplaces canvas shadows
+      // under a scaled transform) + an eye that is a touch brighter in the middle
+      if (glow > 0.5) halo(ctx, cx, cy, rx * 2.1, ry * 1.9, faceColor, 0.35 * normal);
       const eg = ctx.createRadialGradient(cx, cy - ry * 0.2, 0, cx, cy, Math.max(rx, ry));
       eg.addColorStop(0, glowCenter);
       eg.addColorStop(1, faceColor);
@@ -242,7 +242,6 @@ export function drawFace(
       ctx.beginPath();
       ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
       ctx.fill();
-      ctx.shadowBlur = 0;
       ctx.fillStyle = faceColor;
       if (open > 0.35) {
         // one dot that rolls toward the gaze (and the cursor)
@@ -259,8 +258,8 @@ export function drawFace(
       ctx.restore();
     }
 
-    ctx.shadowColor = faceColor;
-    ctx.shadowBlur = S * 0.03 * glow;
+    if (glow > 0.5 && special > 0.01) halo(ctx, cx, cy, rx * 2, rx * 1.8, faceColor, 0.3 * special);
+    ctx.fillStyle = faceColor;
     if (f.happyEye > 0.01) {
       const s = 0.6 + 0.4 * f.happyEye;
       ctx.globalAlpha = Math.min(1, f.happyEye);
@@ -293,27 +292,25 @@ export function drawFace(
     }
   }
 
-  ctx.shadowBlur = 0;
-
   // mouth: face-color line with a brighter middle; dark inside with a tongue when open
-  const mx = lx * 0.6 + f.mouthSkew * 0.07;
-  const my = MOUTH_Y + ly * 0.6;
+  // the face moves as one piece; only the eye dots roll inside the eyes
+  const mx = lx + f.mouthSkew * 0.07;
+  const my = MOUTH_Y + ly;
   const round = Math.min(1, Math.max(0, f.mouthRound));
   const w = f.mouthW;
   const mg = ctx.createLinearGradient(mx - w - 0.02, my, mx + w + 0.02, my);
   mg.addColorStop(0, mouthEdge);
   mg.addColorStop(0.5, glowCenter);
   mg.addColorStop(1, mouthEdge);
-  ctx.shadowColor = faceColor;
-  ctx.shadowBlur = S * 0.02 * glow;
-
-  const openShape = (path: Path2D, open: number, tongueY: number, tongueW: number) => {
+  // plain beginPath() paths, traced again for each pass (fill, clip, stroke)
+  const openShape = (trace: () => void, open: number, tongueY: number, tongueW: number) => {
     ctx.fillStyle = inner;
-    ctx.fill(path);
-    ctx.shadowBlur = 0;
+    trace();
+    ctx.fill();
     if (open > 0.02) {
       ctx.save();
-      ctx.clip(path);
+      trace();
+      ctx.clip();
       ctx.fillStyle = cheekColor;
       ctx.globalAlpha *= Math.min(1, (open - 0.02) * 12);
       ctx.beginPath();
@@ -324,9 +321,9 @@ export function drawFace(
     ctx.strokeStyle = mg;
     const lw = ctx.lineWidth;
     ctx.lineWidth = lw * 0.6;
-    ctx.stroke(path);
+    trace();
+    ctx.stroke();
     ctx.lineWidth = lw;
-    ctx.shadowBlur = S * 0.02 * glow;
   };
 
   if (round < 0.99) {
@@ -345,34 +342,58 @@ export function drawFace(
       return [x, y] as const;
     };
     const open = Math.max(0, f.mouthOpen);
-    const path = new Path2D();
-    for (let i = 0; i <= N; i++) {
-      const [x, y] = pt(i, -open * 0.15);
-      i ? path.lineTo(x, y) : path.moveTo(x, y);
-    }
-    if (open > 0.003) {
-      for (let i = N; i >= 0; i--) {
-        const [x, y] = pt(i, open);
-        path.lineTo(x, y);
+    const top = () => {
+      for (let i = 0; i <= N; i++) {
+        const [x, y] = pt(i, -open * 0.15);
+        i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
       }
-      path.closePath();
-      openShape(path, open, pt(N / 2, open)[1], w * 0.55);
+    };
+    if (open > 0.003) {
+      const trace = () => {
+        ctx.beginPath();
+        top();
+        for (let i = N; i >= 0; i--) {
+          const [x, y] = pt(i, open);
+          ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+      };
+      openShape(trace, open, pt(N / 2, open)[1], w * 0.55);
     } else {
       ctx.strokeStyle = mg;
-      ctx.stroke(path);
+      ctx.beginPath();
+      top();
+      ctx.stroke();
     }
   }
   if (round > 0.01) {
     ctx.globalAlpha = round;
     const r = Math.max(0.02, f.mouthOpen * 0.55 + 0.01);
-    const path = new Path2D();
-    path.ellipse(mx, my + 0.01, r * 0.85, r, 0, 0, Math.PI * 2);
+    const trace = () => {
+      ctx.beginPath();
+      ctx.ellipse(mx, my + 0.01, r * 0.85, r, 0, 0, Math.PI * 2);
+    };
     ctx.lineWidth = LINE * 0.8;
-    openShape(path, f.mouthOpen, my + 0.01 + r * 0.8, r * 0.6);
+    openShape(trace, f.mouthOpen, my + 0.01 + r * 0.8, r * 0.6);
     ctx.lineWidth = LINE;
   }
-  ctx.shadowBlur = 0;
   ctx.globalAlpha = 1;
+}
+
+function halo(ctx: CanvasRenderingContext2D, x: number, y: number, rx: number, ry: number, color: string, alpha: number) {
+  const g = ctx.createRadialGradient(x, y, 0, x, y, 1);
+  g.addColorStop(0, color);
+  g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.translate(x, y);
+  ctx.scale(rx, ry);
+  ctx.translate(-x, -y);
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.arc(x, y, 1, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
 }
 
 export function heart(ctx: CanvasRenderingContext2D, x: number, y: number, s: number) {
