@@ -97,12 +97,11 @@ for ~26 s on mobile. Fixes:
   density when frames stay expensive.
 - Result in Lighthouse with software GL: mobile 95–96, desktop 100, CLS 0.
 
-## Intro
+## Heading
 
-The stage leads with the product sentence (the page's `h1`: "A tiny 3D character that
-shows your UI's state.") and an **Install moodi** button that copies `npm i moodi three`,
-plus a Docs link, so the first screen says what moodi is and what to do next on every
-size. The mood name below the character is now an `h2`.
+The visible intro (product sentence + Install button) was tried and removed at the
+owner's request; the stage shows only the character and its mood. The product sentence
+stays as a visually hidden `h1`, and the mood name below the character is an `h2`.
 
 ## Sound and size animation
 

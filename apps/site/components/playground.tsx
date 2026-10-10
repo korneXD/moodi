@@ -145,8 +145,9 @@ export function Playground() {
       </nav>
 
       {/* stage */}
-      <main className="area-stage relative flex min-h-0 flex-col items-center justify-center gap-4 overflow-hidden px-4 compact:py-6">
-        <Intro />
+      <main className="area-stage relative flex min-h-0 flex-col items-center justify-center overflow-hidden px-4 compact:py-6">
+        {/* visually hidden: the page's heading for search engines and screen readers */}
+        <h1 className="sr-only">moodi: a tiny 3D character that shows your UI&rsquo;s state.</h1>
         <div className="relative flex flex-col items-center">
           <div
             aria-hidden
@@ -161,7 +162,7 @@ export function Playground() {
             cheekColor={state.cheekColor}
             speed={state.speed}
             followCursor={state.followCursor}
-            size="min(52dvh, 40vw, 480px)"
+            size="min(60dvh, 40vw, 520px)"
             loading={LOADING}
             poster={pristine && state.shape === "ghost" && shownMood === "idle" ? HERO_POSTER : undefined}
             onMoodChange={onMoodChange}
@@ -333,40 +334,6 @@ function Thumb({
       </span>
       <span className={`text-[11px] ${active ? "text-fg" : "text-muted group-hover:text-fg"}`}>{label}</span>
     </button>
-  );
-}
-
-const INSTALL = "npm i moodi three";
-
-/** What moodi is, and the one obvious next step. */
-function Intro() {
-  const [copied, copy] = useCopy();
-  return (
-    <div className="enter relative z-10 flex flex-col items-center text-center" style={{ ["--i" as string]: 1.5 }}>
-      <h1 className="max-w-[26ch] text-[22px] font-semibold leading-[1.2] tracking-[-0.025em] text-balance sm:text-[24px]">
-        A tiny 3D character that shows your UI&rsquo;s state.
-      </h1>
-      <div className="mt-3.5 flex flex-wrap items-center justify-center gap-2">
-        <button
-          type="button"
-          onClick={() => copy(INSTALL)}
-          aria-label={copied ? `Copied: ${INSTALL}` : `Install moodi: copy ${INSTALL}`}
-          className="press flex h-9 items-center gap-2.5 rounded-lg bg-fg pl-4 pr-3 text-[14px] font-medium text-bg hover:opacity-90"
-        >
-          Install moodi
-          <span className="flex items-center gap-1.5 border-l border-bg/20 pl-2.5 font-mono text-[12px] font-normal opacity-70">
-            {copied ? "Copied" : INSTALL}
-            {copied ? <CheckIcon width={13} height={13} /> : <CopyIcon width={13} height={13} />}
-          </span>
-        </button>
-        <Link
-          href="/docs"
-          className="press flex h-9 items-center rounded-lg px-3.5 text-[14px] text-muted hover:bg-chip hover:text-fg"
-        >
-          Docs
-        </Link>
-      </div>
-    </div>
   );
 }
 
