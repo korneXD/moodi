@@ -7,7 +7,7 @@ what is happening — thinking, loading, happy, error, sleeping. Shape, color an
 expression are all customizable. Everything is generated in code: no models, no
 textures, nothing to download besides three.js.
 
-![moodi](https://raw.githubusercontent.com/korneXD/moodi/main/apps/site/app/opengraph-image.png)
+![moodi](https://raw.githubusercontent.com/korneXD/moodi/main/.github/assets/readme.png)
 
 **Playground:** <https://moodi-two-tau.vercel.app> · by [@itsk0rn3l](https://x.com/itsk0rn3l)
 

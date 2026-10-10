@@ -151,7 +151,7 @@ export function drawFace(
   dot: string,
   /** inside of an open mouth */
   inner: string,
-  /** far end of the mouth gradient (a blush-tinted face color) */
+  /** ends of the mouth gradient */
   mouthEdge: string,
 ) {
   const S = ctx.canvas.width;
@@ -295,7 +295,7 @@ export function drawFace(
 
   ctx.shadowBlur = 0;
 
-  // mouth: gradient line (bright → face color → blush tint); dark inside with a tongue when open
+  // mouth: face-color line with a brighter middle; dark inside with a tongue when open
   const mx = lx * 0.6 + f.mouthSkew * 0.07;
   const my = MOUTH_Y + ly * 0.6;
   const round = Math.min(1, Math.max(0, f.mouthRound));

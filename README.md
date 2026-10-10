@@ -4,7 +4,7 @@
 website with one line. Its face shows what is happening: thinking, loading,
 happy, error, sleeping.
 
-![moodi](apps/site/app/opengraph-image.png)
+![moodi](.github/assets/readme.png)
 
 - **Playground:** <https://moodi-two-tau.vercel.app>
 - **Package docs:** [packages/moodi/README.md](packages/moodi/README.md)
