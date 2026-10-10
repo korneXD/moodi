@@ -1,0 +1,360 @@
+import type { Mood } from './constants';
+
+export interface FaceParams {
+  eyeOpen: number;
+  eyeSize: number;
+  lookX: number;
+  lookY: number;
+  lidCover: number;
+  lidTilt: number;
+  happyEye: number;
+  closedEye: number;
+  xEye: number;
+  heartEye: number;
+  mouthW: number;
+  mouthCurve: number;
+  mouthOpen: number;
+  mouthRound: number;
+  mouthSkew: number;
+  mouthWave: number;
+  blush: number;
+}
+
+export const FACE_KEYS = [
+  'eyeOpen',
+  'eyeSize',
+  'lookX',
+  'lookY',
+  'lidCover',
+  'lidTilt',
+  'happyEye',
+  'closedEye',
+  'xEye',
+  'heartEye',
+  'mouthW',
+  'mouthCurve',
+  'mouthOpen',
+  'mouthRound',
+  'mouthSkew',
+  'mouthWave',
+  'blush',
+] as const satisfies readonly (keyof FaceParams)[];
+
+const BASE: FaceParams = {
+  eyeOpen: 1,
+  eyeSize: 1,
+  lookX: 0,
+  lookY: 0,
+  lidCover: 0,
+  lidTilt: 0,
+  happyEye: 0,
+  closedEye: 0,
+  xEye: 0,
+  heartEye: 0,
+  mouthW: 0.1,
+  mouthCurve: 0.35,
+  mouthOpen: 0,
+  mouthRound: 0,
+  mouthSkew: 0,
+  mouthWave: 0,
+  blush: 0.45,
+};
+
+export const MOOD_FACE: Record<Mood, FaceParams> = {
+  idle: { ...BASE },
+  thinking: {
+    ...BASE,
+    eyeOpen: 0.92,
+    lookX: 0.7,
+    lookY: -0.8,
+    lidCover: 0.12,
+    mouthW: 0.065,
+    mouthCurve: 0,
+    mouthSkew: 0.8,
+    blush: 0.3,
+  },
+  loading: { ...BASE, lidCover: 0.48, mouthW: 0.06, mouthCurve: 0.12, blush: 0.3 },
+  listening: { ...BASE, eyeOpen: 1.12, eyeSize: 1.16, mouthW: 0.06, mouthCurve: 0.2, mouthOpen: 0.02 },
+  speaking: { ...BASE, mouthW: 0.09, mouthCurve: 0.25 },
+  happy: { ...BASE, happyEye: 1, mouthW: 0.13, mouthCurve: 1, mouthOpen: 0.08, blush: 1 },
+  surprised: {
+    ...BASE,
+    eyeOpen: 1.25,
+    eyeSize: 1.22,
+    mouthW: 0.06,
+    mouthCurve: 0,
+    mouthOpen: 0.12,
+    mouthRound: 1,
+    blush: 0.35,
+  },
+  sad: {
+    ...BASE,
+    eyeOpen: 0.95,
+    lidCover: 0.32,
+    lidTilt: 0.5,
+    lookY: 0.45,
+    mouthW: 0.08,
+    mouthCurve: -0.75,
+    blush: 0.2,
+  },
+  error: { ...BASE, xEye: 1, mouthW: 0.1, mouthCurve: -0.2, mouthWave: 1, blush: 0.15 },
+  sleeping: {
+    ...BASE,
+    closedEye: 1,
+    mouthW: 0.04,
+    mouthCurve: 0,
+    mouthOpen: 0.035,
+    mouthRound: 0.7,
+    blush: 0.55,
+  },
+  love: { ...BASE, heartEye: 1, mouthW: 0.11, mouthCurve: 0.9, mouthOpen: 0.03, blush: 1 },
+};
+
+/** How much the pointer steers the gaze in each mood. */
+export const FOLLOW_WEIGHT: Record<Mood, number> = {
+  idle: 1,
+  thinking: 0.15,
+  loading: 0,
+  listening: 1,
+  speaking: 0.9,
+  happy: 0.6,
+  surprised: 0.8,
+  sad: 0.3,
+  error: 0.3,
+  sleeping: 0,
+  love: 0.7,
+};
+
+export const cloneFace = (f: FaceParams): FaceParams => ({ ...f });
+
+const EYE_X = 0.31;
+const EYE_Y = -0.04;
+const EYE_RX = 0.098;
+const EYE_RY = 0.128;
+const MOUTH_Y = 0.2;
+const LINE = 0.05;
+
+/**
+ * Paints the face into a square canvas. Face space is [-1, 1] on both axes,
+ * y pointing down. Colors are CSS strings.
+ */
+export function drawFace(
+  ctx: CanvasRenderingContext2D,
+  f: FaceParams,
+  blink: number,
+  faceColor: string,
+  cheekColor: string,
+  /** 0..1, light eyes glow more than dark ones */
+  glow: number,
+  glowCenter: string,
+  /** light eyes get a dark pupil; dark eyes just a white catchlight */
+  pupil: string | null,
+) {
+  const S = ctx.canvas.width;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, S, S);
+  ctx.setTransform(S / 2, 0, 0, S / 2, S / 2, S / 2);
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  const lx = f.lookX * 0.075;
+  const ly = f.lookY * 0.06;
+
+  // cheeks: soft, blurred blush; little "///" strokes when flushed
+  if (f.blush > 0.01) {
+    const blur = S * 0.018;
+    ctx.save();
+    if ('filter' in ctx) ctx.filter = `blur(${blur}px)`;
+    for (const side of [-1, 1]) {
+      const cx = side * 0.52 + lx * 0.4;
+      const cy = 0.16 + ly * 0.4;
+      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, 0.16);
+      g.addColorStop(0, cheekColor);
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.globalAlpha = Math.min(1, f.blush) * 0.62;
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, 0.17, 0.12, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+    const lines = Math.min(1, Math.max(0, (f.blush - 0.6) / 0.4));
+    if (lines > 0.01) {
+      ctx.save();
+      ctx.globalAlpha = lines * 0.55;
+      ctx.strokeStyle = cheekColor;
+      ctx.lineWidth = 0.016;
+      ctx.lineCap = 'round';
+      for (const side of [-1, 1]) {
+        const cx = side * 0.52 + lx * 0.4;
+        const cy = 0.16 + ly * 0.4;
+        for (let i = -1; i <= 1; i++) {
+          const x = cx + i * 0.045;
+          ctx.beginPath();
+          ctx.moveTo(x + 0.018, cy - 0.035);
+          ctx.lineTo(x - 0.018, cy + 0.035);
+          ctx.stroke();
+        }
+      }
+      ctx.restore();
+    }
+  }
+
+  ctx.fillStyle = faceColor;
+  ctx.strokeStyle = faceColor;
+  ctx.lineWidth = LINE;
+
+  const special = Math.min(1, f.happyEye + f.closedEye + f.xEye + f.heartEye);
+  const normal = 1 - special;
+
+  for (const side of [-1, 1]) {
+    const cx = side * EYE_X + lx;
+    const cy = EYE_Y + ly;
+    const rx = EYE_RX * f.eyeSize;
+
+    if (normal > 0.01) {
+      ctx.globalAlpha = normal;
+      const open = Math.max(0.06, f.eyeOpen * blink);
+      const ry = EYE_RY * f.eyeSize * open;
+      ctx.save();
+      if (f.lidCover > 0.01 || f.lidTilt > 0.01) {
+        const top = cy - EYE_RY * f.eyeSize;
+        const lidY = top + 2 * EYE_RY * f.eyeSize * f.lidCover;
+        ctx.translate(cx, lidY);
+        ctx.rotate(side * f.lidTilt * 0.6);
+        ctx.beginPath();
+        ctx.rect(-1, 0, 2, 2);
+        ctx.clip();
+        ctx.rotate(-side * f.lidTilt * 0.6);
+        ctx.translate(-cx, -lidY);
+      }
+      // soft halo + a gradient that is a touch brighter in the middle
+      ctx.shadowColor = faceColor;
+      ctx.shadowBlur = S * 0.035 * glow;
+      const eg = ctx.createRadialGradient(cx, cy - ry * 0.2, 0, cx, cy, Math.max(rx, ry));
+      eg.addColorStop(0, glowCenter);
+      eg.addColorStop(1, faceColor);
+      ctx.fillStyle = eg;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = faceColor;
+      if (pupil && open > 0.25) {
+        const k = Math.min(1, (open - 0.25) * 2.5);
+        // pupils roll toward the gaze inside the eye
+        const gx = Math.max(-1, Math.min(1, f.lookX));
+        const gy = Math.max(-1, Math.min(1, f.lookY));
+        const px = cx + gx * rx * 0.46;
+        const py = cy + gy * ry * 0.34 + ry * 0.06;
+        ctx.globalAlpha = normal * k;
+        ctx.fillStyle = pupil;
+        ctx.beginPath();
+        ctx.ellipse(px, py, rx * 0.56, Math.min(ry * 0.66, rx * 0.72), 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.arc(px - rx * 0.2, py - rx * 0.22, rx * 0.17, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = faceColor;
+      } else if (open > 0.35) {
+        // catchlight
+        ctx.globalAlpha = normal * Math.min(1, (open - 0.35) * 3) * 0.95;
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.arc(cx - rx * 0.32 + f.lookX * rx * 0.3, cy - ry * 0.38 + f.lookY * ry * 0.2, rx * 0.3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = faceColor;
+      }
+      ctx.restore();
+    }
+
+    ctx.shadowColor = faceColor;
+    ctx.shadowBlur = S * 0.03 * glow;
+    if (f.happyEye > 0.01) {
+      const s = 0.6 + 0.4 * f.happyEye;
+      ctx.globalAlpha = Math.min(1, f.happyEye);
+      ctx.beginPath();
+      ctx.arc(cx, cy + 0.045, rx * 1.15 * s, Math.PI * 1.12, Math.PI * 1.88);
+      ctx.stroke();
+    }
+    if (f.closedEye > 0.01) {
+      const s = 0.6 + 0.4 * f.closedEye;
+      ctx.globalAlpha = Math.min(1, f.closedEye);
+      ctx.beginPath();
+      ctx.moveTo(cx - rx * 1.15 * s, cy + 0.01);
+      ctx.quadraticCurveTo(cx, cy + 0.07 * s, cx + rx * 1.15 * s, cy + 0.01);
+      ctx.stroke();
+    }
+    if (f.xEye > 0.01) {
+      const s = rx * 0.95 * (0.6 + 0.4 * f.xEye);
+      ctx.globalAlpha = Math.min(1, f.xEye);
+      ctx.beginPath();
+      ctx.moveTo(cx - s, cy - s);
+      ctx.lineTo(cx + s, cy + s);
+      ctx.moveTo(cx + s, cy - s);
+      ctx.lineTo(cx - s, cy + s);
+      ctx.stroke();
+    }
+    if (f.heartEye > 0.01) {
+      ctx.globalAlpha = Math.min(1, f.heartEye);
+      heart(ctx, cx, cy, rx * 1.35 * (0.5 + 0.5 * f.heartEye));
+      ctx.fill();
+    }
+  }
+
+  ctx.shadowBlur = 0;
+
+  // mouth
+  const mx = lx * 0.6 + f.mouthSkew * 0.07;
+  const my = MOUTH_Y + ly * 0.6;
+  const round = Math.min(1, Math.max(0, f.mouthRound));
+  if (round < 0.99) {
+    ctx.globalAlpha = 1 - round;
+    const w = f.mouthW;
+    const N = 18;
+    const curveAt = (u: number) => f.mouthCurve * 0.075 * (1 - u * u);
+    const pt = (i: number, open: number) => {
+      const u = (i / N) * 2 - 1;
+      const x = mx + u * w;
+      const y =
+        my +
+        curveAt(u) +
+        f.mouthSkew * u * 0.03 +
+        f.mouthWave * 0.018 * Math.sin((u + 1) * Math.PI * 2) +
+        open * (1 - u * u);
+      return [x, y] as const;
+    };
+    const open = Math.max(0, f.mouthOpen);
+    ctx.beginPath();
+    for (let i = 0; i <= N; i++) {
+      const [x, y] = pt(i, -open * 0.15);
+      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    if (open > 0.003) {
+      for (let i = N; i >= 0; i--) {
+        const [x, y] = pt(i, open);
+        ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.fill();
+    }
+    ctx.stroke();
+  }
+  if (round > 0.01) {
+    ctx.globalAlpha = round;
+    const r = Math.max(0.02, f.mouthOpen * 0.55 + 0.01);
+    ctx.beginPath();
+    ctx.ellipse(mx, my + 0.01, r * 0.85, r, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+export function heart(ctx: CanvasRenderingContext2D, x: number, y: number, s: number) {
+  ctx.beginPath();
+  ctx.moveTo(x, y + s * 0.85);
+  ctx.bezierCurveTo(x - s * 1.25, y + s * 0.05, x - s * 0.75, y - s * 0.95, x, y - s * 0.35);
+  ctx.bezierCurveTo(x + s * 0.75, y - s * 0.95, x + s * 1.25, y + s * 0.05, x, y + s * 0.85);
+  ctx.closePath();
+}

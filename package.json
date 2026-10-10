@@ -1,0 +1,11 @@
+{
+  "name": "moodi-monorepo",
+  "private": true,
+  "packageManager": "pnpm@8.14.3",
+  "scripts": {
+    "build": "pnpm --filter site build",
+    "build:pkg": "pnpm --filter moodi build",
+    "dev": "pnpm --filter moodi build && pnpm --parallel --filter moodi --filter site dev",
+    "typecheck": "pnpm -r typecheck"
+  }
+}

@@ -1,0 +1,300 @@
+@import "tailwindcss";
+
+@custom-variant compact {
+  @media (max-width: 639px) {
+    @slot;
+  }
+  @media (max-height: 599px) {
+    @slot;
+  }
+}
+
+/* lets the stage glow and accents transition between body colors */
+@property --accent {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #6c5ce7;
+}
+
+:root {
+  --bg: #0c0b0a;
+  --fg: #ede8e2;
+  --muted: #8d867e;
+  --faint: #59534d;
+  --line: rgb(255 236 220 / 0.08);
+  --chip: rgb(255 236 220 / 0.055);
+  --chip-strong: rgb(255 236 220 / 0.1);
+  --syn-tag: #f0c6a6;
+  --syn-str: #b9d3a9;
+  --syn-kw: #c9b6ec;
+  --glow: 30%;
+  --glow-2: 18%;
+  --glow-blend: screen;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --bg: #f5f2ee;
+  --fg: #1d1a17;
+  --muted: #6f6862;
+  --faint: #aaa29a;
+  --line: rgb(60 36 16 / 0.1);
+  --chip: rgb(60 36 16 / 0.05);
+  --chip-strong: rgb(60 36 16 / 0.09);
+  --syn-tag: #a8512a;
+  --syn-str: #4c7542;
+  --syn-kw: #7550b5;
+  --glow: 50%;
+  --glow-2: 24%;
+  --glow-blend: multiply;
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-chip: var(--chip);
+  --color-chip-strong: var(--chip-strong);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+body {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 300ms var(--ease), color 300ms var(--ease);
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 40%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--accent) 80%, var(--fg));
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* ---------- layout: the hero is the whole page ---------- */
+
+.app {
+  height: 100dvh;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: 56px minmax(0, 1fr) auto;
+  grid-template-columns: 88px minmax(0, 1fr) 340px;
+  grid-template-areas:
+    "header header header"
+    "rail stage panel"
+    "dock dock dock";
+  transition: --accent 350ms var(--ease);
+}
+
+.area-header { grid-area: header; }
+.area-rail { grid-area: rail; }
+.area-stage { grid-area: stage; }
+.area-panel { grid-area: panel; }
+.area-dock { grid-area: dock; }
+
+@media (max-width: 1023px) {
+  .app {
+    grid-template-columns: 76px minmax(0, 1fr) 300px;
+  }
+}
+
+@media (max-width: 639px), (max-height: 599px) {
+  .app {
+    height: auto;
+    min-height: 100dvh;
+    overflow: visible;
+    grid-template-rows: 56px auto auto auto auto;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "header" "stage" "dock" "rail" "panel";
+  }
+}
+
+/* code block collapses on tablets only */
+@media (min-width: 640px) and (max-width: 1023px) and (min-height: 600px) {
+  .code-collapsible[data-open="false"] .code-body {
+    display: none;
+  }
+}
+@media (min-width: 1024px), (max-width: 639px), (max-height: 599px) {
+  .code-toggle {
+    display: none;
+  }
+}
+
+.stage-glow {
+  /* accent core drifting into two hue-shifted neighbours */
+  background:
+    radial-gradient(closest-side at 50% 52%, color-mix(in oklab, var(--accent) var(--glow), transparent), transparent),
+    radial-gradient(
+      closest-side at 32% 36%,
+      color-mix(in oklch, oklch(from var(--accent) calc(l + 0.08) c calc(h - 45)) var(--glow-2), transparent),
+      transparent
+    ),
+    radial-gradient(
+      closest-side at 70% 64%,
+      color-mix(in oklch, oklch(from var(--accent) l calc(c * 1.1) calc(h + 50)) var(--glow-2), transparent),
+      transparent
+    );
+  filter: blur(28px);
+  mix-blend-mode: var(--glow-blend);
+  animation: glow-drift 18s ease-in-out infinite alternate;
+}
+:root[data-theme="light"] .stage-glow {
+  filter: blur(36px) saturate(1.15);
+}
+
+@keyframes glow-drift {
+  to {
+    transform: rotate(40deg) scale(1.06);
+  }
+}
+
+/* custom poke cursor over the hero buddy */
+.stage-buddy {
+  cursor:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='9' fill='white' fill-opacity='.18' stroke='white' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='2.5' fill='white'/%3E%3C/svg%3E")
+      16 16,
+    pointer;
+}
+
+button,
+[role="button"],
+[role="tab"],
+[role="switch"],
+label[for],
+select,
+summary,
+a {
+  cursor: pointer;
+}
+
+.range {
+  appearance: none;
+  background: transparent;
+}
+.range::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--accent) var(--pct), var(--chip-strong) var(--pct));
+}
+.range::-moz-range-track {
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--accent) var(--pct), var(--chip-strong) var(--pct));
+}
+.range::-webkit-slider-thumb {
+  appearance: none;
+  margin-top: -6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
+  transition: transform 150ms var(--ease);
+}
+.range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
+}
+.range:active::-webkit-slider-thumb {
+  transform: scale(1.15);
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---------- motion ---------- */
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+@keyframes swap-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+@keyframes swap-out {
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+.enter {
+  animation: enter 640ms var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 50ms + 80ms);
+}
+.swap-in {
+  animation: swap-in 320ms var(--ease) both;
+}
+.swap-out {
+  animation: swap-out 220ms var(--ease) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes enter {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes swap-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes swap-out {
+    to {
+      opacity: 0;
+    }
+  }
+  .press {
+    transform: none !important;
+  }
+  .stage-glow {
+    animation: none;
+  }
+}
+
+.press {
+  transition:
+    transform 150ms var(--ease),
+    opacity 150ms var(--ease),
+    background-color 150ms var(--ease),
+    color 150ms var(--ease);
+}
+@media (hover: hover) {
+  .press:hover {
+    transform: scale(1.04);
+  }
+}
+.press:active {
+  transform: scale(0.97);
+}

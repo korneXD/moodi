@@ -1,0 +1,75 @@
+{
+  "name": "moodi",
+  "version": "0.1.0",
+  "description": "Tiny 3D mood buddies for your UI.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js",
+      "require": "./dist/react.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "./dist/index.js",
+    "./dist/index.cjs"
+  ],
+  "peerDependencies": {
+    "three": ">=0.160.0",
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "@types/three": "^0.186.0",
+    "react": "19.3.0",
+    "three": "^0.186.1",
+    "tsup": "^8.5.1",
+    "typescript": "^5"
+  },
+  "keywords": [
+    "3d",
+    "avatar",
+    "mascot",
+    "web-component",
+    "react",
+    "three",
+    "loading",
+    "status",
+    "ai"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/korneXD/moodi.git",
+    "directory": "packages/moodi"
+  },
+  "homepage": "https://moodi.dev",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "author": "itsk0rn3l (https://x.com/itsk0rn3l)",
+  "bugs": {
+    "url": "https://github.com/korneXD/moodi/issues"
+  }
+}
