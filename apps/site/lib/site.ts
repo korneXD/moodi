@@ -1,6 +1,7 @@
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.getmoodi.dev").replace(/\/$/, "");
 export const SITE_NAME = "moodi";
-export const SITE_TITLE = "moodi – 3D mood buddies";
+/** 50–60 characters: fills the search result line without getting cut. */
+export const SITE_TITLE = "moodi – 3D Mood Buddy for React and Web Components";
 /** The meta description (search results): 150 characters at most. */
 export const SITE_DESCRIPTION =
   "moodi is a tiny 3D character for your website. One line of code, and its face shows what is happening: thinking, loading, happy, error.";

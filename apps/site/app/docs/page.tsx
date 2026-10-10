@@ -18,7 +18,8 @@ const DOCS_OG_IMAGE = {
 };
 
 export const metadata: Metadata = {
-  title: DOCS_TITLE,
+  // absolute: the template would only add " | moodi" to a 4-character title
+  title: { absolute: "moodi Docs – Install, Props, Moods and Imperative API" },
   description: DOCS_DESCRIPTION,
   alternates: { canonical: "/docs" },
   openGraph: {
