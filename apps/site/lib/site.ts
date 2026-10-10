@@ -5,7 +5,7 @@ export const SITE_URL = (
     : "http://localhost:3000")
 ).replace(/\/$/, "");
 export const SITE_NAME = "moodi";
-export const SITE_TITLE = "Tiny 3D Mood Buddies for Your UI | moodi";
+export const SITE_TITLE = "moodi – 3D mood buddies";
 /** The meta description (search results): 150 characters at most. */
 export const SITE_DESCRIPTION =
   "moodi is a tiny 3D character for your website. One line of code, and its face shows what is happening: thinking, loading, happy, error.";

@@ -21,7 +21,7 @@ import { CheckIcon, CopyIcon, GitHubIcon, MoonIcon, PauseIcon, SunIcon } from ".
 
 const BODY = Object.entries(PALETTES).map(([name, color]) => ({ name, color }));
 const FACE = [
-  { name: "Ink", color: "#2a1d18" },
+  { name: "Black", color: "#121014" },
   { name: "Cream", color: "#fff6ee" },
   { name: "Night", color: "#1e2a44" },
 ];
@@ -146,7 +146,7 @@ export function Playground() {
               auto
               value={state.faceColor}
               options={FACE.slice(0, 2)}
-              pickerBase="#2a1d18"
+              pickerBase="#121014"
               onChange={(c) => set("faceColor", c)}
             />
           </Row>

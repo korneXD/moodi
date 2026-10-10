@@ -41,12 +41,12 @@ export const mix = (a: RGB, b: RGB, t: number): RGB => [
 const lin = (v: number) => (v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
 export const luminance = (c: RGB) => 0.2126 * lin(c[0]) + 0.7152 * lin(c[1]) + 0.0722 * lin(c[2]);
 
-const INK: RGB = [0.16, 0.11, 0.1];
+const INK: RGB = [0.07, 0.06, 0.08];
 const CREAM: RGB = [1, 0.97, 0.93];
 const ROSE: RGB = [1, 0.42, 0.48];
 
-/** Dark warm ink on light bodies, cream on dark ones. */
-export const autoFace = (body: RGB): RGB => (luminance(body) > 0.18 ? mix(INK, body, 0.12) : CREAM);
+/** Near-black on most bodies (the default Iris included), cream only on very dark ones like Ink. */
+export const autoFace = (body: RGB): RGB => (luminance(body) > 0.06 ? mix(INK, body, 0.06) : CREAM);
 
 /** Blush that sits naturally on the body color. */
 export const autoCheek = (body: RGB): RGB => mix(body, ROSE, 0.78);

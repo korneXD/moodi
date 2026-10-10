@@ -57,7 +57,7 @@ export function Swatches({ label, value, options, onChange, auto, pickerBase }: 
             className="press relative grid size-[22px] place-items-center rounded-full"
           >
             <span
-              className="size-[18px] rounded-full shadow-[inset_0_0_0_1px_rgb(0_0_0/0.12)]"
+              className="size-[18px] rounded-full shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--fg)_22%,transparent)]"
               style={{ background: o.color }}
             />
             <span

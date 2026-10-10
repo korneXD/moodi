@@ -52,7 +52,7 @@ Choices made where the spec left room, or where the owner changed it.
   neighbours (`oklch(from …)`), blended `screen` on dark and `multiply` on light.
 - `/lab` renders the full shape × mood matrix for visual checks (noindex).
 - `/og`, `/og/icon` and `/og/readme` are compositions used to regenerate
-  `public/opengraph-v1.png`, `app/icon.png`, `app/apple-icon.png` and
+  `public/opengraph-v2.png`, `app/icon.png`, `app/apple-icon.png` and
   `.github/assets/readme.png` from a real render (headless screenshot), not a drawing.
 - Domain: `moodi.dev` is not registered yet; `SITE_URL` falls back to the Vercel
   production URL.
@@ -63,7 +63,7 @@ Choices made where the spec left room, or where the owner changed it.
   description, a ≤120-char OG description, the X handle and `jsonLd()`.
 - Root metadata: title template `%s | moodi`, keywords, category, author/creator, robots with
   `max-image-preview: large`, Open Graph + Twitter `summary_large_image` with a versioned
-  image (`public/opengraph-v1.png`; bump the number whenever the picture changes, link
+  image (`public/opengraph-v2.png`; bump the number whenever the picture changes, link
   previews cache by URL). Pages set `alternates.canonical`.
 - `robots.ts` (disallows `/lab` and `/og`), `sitemap.ts` (`/`, `/docs`), a
   `SoftwareApplication` JSON-LD with the creator on the home page, a noindex 404.

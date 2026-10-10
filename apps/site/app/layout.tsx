@@ -16,11 +16,11 @@ const geistMono = Geist_Mono({
 // A new file name whenever the picture changes: X, Facebook, LinkedIn and Slack cache a link preview by its image URL.
 // Regenerate it by screenshotting /og at 1200×630.
 const OG_IMAGE = {
-  url: "/opengraph-v1.png",
+  url: "/opengraph-v2.png",
   width: 1200,
   height: 630,
   type: "image/png",
-  alt: "moodi: a smiling purple 3D ghost next to the words Tiny 3D mood buddies for your UI and npm i moodi",
+  alt: "moodi: a smiling purple 3D ghost with a black face next to the words Tiny 3D mood buddies for your UI and npm i moodi",
 };
 
 export const metadata: Metadata = {

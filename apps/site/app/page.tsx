@@ -15,7 +15,7 @@ const structuredData = {
   license: "https://opensource.org/licenses/MIT",
   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
   sameAs: [GITHUB_URL, NPM_URL],
-  image: `${SITE_URL}/opengraph-v1.png`,
+  image: `${SITE_URL}/opengraph-v2.png`,
   creator: {
     "@type": "Person",
     name: AUTHOR.name,

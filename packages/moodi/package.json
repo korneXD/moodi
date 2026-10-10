@@ -1,6 +1,6 @@
 {
   "name": "moodi",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Tiny 3D mood buddies for your UI.",
   "license": "MIT",
   "type": "module",
