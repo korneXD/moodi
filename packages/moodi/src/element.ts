@@ -94,7 +94,10 @@ export class MoodiBuddyElement extends Base {
 
   attributeChangedCallback(name: string, old: string | null, val: string | null) {
     if (old === val) return;
-    if (name === 'size') this.style.setProperty('--moodi-size', cssSize(val));
+    if (name === 'size') {
+      this.style.setProperty('--moodi-size', cssSize(val));
+      if (old !== null) this.buddy?.bump();
+    }
     if (name === 'aria-label') return;
     this.buddy?.update(this.readState());
     if (name === 'mood' && this.buddy) this.syncLabel(this.buddy.currentMood);

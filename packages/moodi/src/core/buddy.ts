@@ -302,6 +302,14 @@ outgoingLight = mix(outgoingLight, diffuseColor.rgb * 1.12, emis * 0.65);
     wake();
   }
 
+  /** A quick squash-and-stretch, e.g. when the element is resized. */
+  bump(strength = 1) {
+    if (env.reducedMotion) return;
+    this.squashV -= 1.6 * strength;
+    this.needsFrame = true;
+    wake();
+  }
+
   /** Temporary reaction, then back to the current mood. */
   react(mood: Mood, duration = 1200) {
     this.reaction = { mood, left: duration / 1000 };

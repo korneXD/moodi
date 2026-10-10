@@ -100,6 +100,8 @@ Also exported: `SHAPES`, `MOODS`, `PALETTES`, `MOOD_INFO`, `DEFAULTS`, `defineMo
 - Rendering stops while a buddy is off-screen or the tab is hidden; paused buddies (`speed={0}`) only redraw when something changes.
 - `prefers-reduced-motion`: only blinking and soft fades.
 - Software WebGL (SwiftShader, llvmpipe): no continuous animation, frames only on change, 1× pixels.
+- Changing `size` gives a little squash-and-stretch.
+- No sound: the package is silent (the playground's sound effects are site-only).
 - Transparent background, pixel ratio capped at 2.
 - `role="img"` and `aria-label="moodi: <mood>"` (set your own `aria-label` to override).
 - ~11 kB gzip, three.js excluded.

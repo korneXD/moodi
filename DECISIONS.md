@@ -103,3 +103,15 @@ The stage leads with the product sentence (the page's `h1`: "A tiny 3D character
 shows your UI's state.") and an **Install moodi** button that copies `npm i moodi three`,
 plus a Docs link, so the first screen says what moodi is and what to do next on every
 size. The mood name below the character is now an `h2`.
+
+## Sound and size animation
+
+- **Sound effects are site-only** (`apps/site/lib/sound.ts`): one short effect per mood,
+  synthesized with Web Audio (no audio files, nothing added to the npm package). They play
+  on the hero's `moodchange`, but not when a click reaction returns to the current mood.
+  On by default with a **Sound** toggle (stored in `localStorage`); audio unlocks on the
+  first pointer or key press, as browsers require.
+- **Size changes animate.** The hero keeps a fixed canvas and is scaled with a springy CSS
+  transform around its feet, so the label stays put and the canvas never re-allocates
+  while dragging the slider. The library also gives a small squash-and-stretch whenever
+  `size` changes (`buddy.bump()`), which npm users get too.

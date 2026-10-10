@@ -11,11 +11,13 @@ import {
   SHAPE_LABELS,
   SHAPES,
   type Mood,
+  type MoodChangeDetail,
   type MoodiBuddyElement,
   type Shape,
 } from "moodi/react";
 import { INITIAL, SIZE_MAX, SIZE_MIN, SPEEDS, type PlaygroundState } from "@/lib/state";
 import { AUTHOR, GITHUB_URL } from "@/lib/site";
+import { playMood, unlockAudio } from "@/lib/sound";
 import { CodeBlock, useCopy } from "./code-block";
 import { Row, Segmented, Slider, Swatches, Toggle } from "./controls";
 import { CheckIcon, CopyIcon, GitHubIcon, MoonIcon, PauseIcon, SunIcon } from "./icons";
@@ -79,6 +81,39 @@ export function Playground() {
     };
   }, []);
 
+  const [sound, setSound] = useState(true);
+  useEffect(() => {
+    try {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- preference lives in localStorage
+      if (localStorage.getItem("moodi-sound") === "off") setSound(false);
+    } catch {}
+    // browsers only start audio from a user gesture
+    const unlock = () => unlockAudio();
+    addEventListener("pointerdown", unlock, { once: true });
+    addEventListener("keydown", unlock, { once: true });
+    return () => {
+      removeEventListener("pointerdown", unlock);
+      removeEventListener("keydown", unlock);
+    };
+  }, []);
+  const toggleSound = (on: boolean) => {
+    setSound(on);
+    try {
+      localStorage.setItem("moodi-sound", on ? "on" : "off");
+    } catch {}
+    if (on) {
+      unlockAudio();
+      playMood("happy");
+    }
+  };
+  const lastWasReaction = useRef(false);
+  const onMoodChange = useCallback((d: MoodChangeDetail) => {
+    // coming back from a click reaction is not a new state: stay quiet
+    const returning = lastWasReaction.current && !d.reaction;
+    lastWasReaction.current = d.reaction;
+    if (sound && !returning) playMood(d.mood);
+  }, [sound]);
+
   const shownMood: Mood = sleepy ? "sleeping" : state.mood;
   const pristine = isPristine(state);
   preload(HERO_POSTER, { as: "image", fetchPriority: "high" });
@@ -126,10 +161,17 @@ export function Playground() {
             cheekColor={state.cheekColor}
             speed={state.speed}
             followCursor={state.followCursor}
-            size={`calc(min(52dvh, 40vw, 480px) * ${stageScale(state.size)})`}
+            size="min(52dvh, 40vw, 480px)"
             loading={LOADING}
             poster={pristine && state.shape === "ghost" && shownMood === "idle" ? HERO_POSTER : undefined}
+            onMoodChange={onMoodChange}
             className="stage-buddy compact:!h-[min(72vw,340px)] compact:!w-[min(72vw,340px)]"
+            // size scales the hero with a springy transform; the canvas keeps its resolution
+            style={{
+              transform: `scale(${stageScale(state.size)})`,
+              transformOrigin: "50% 84%",
+              transition: "transform 520ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+            }}
           />
           <MoodLabel mood={shownMood} />
         </div>
@@ -201,7 +243,10 @@ export function Playground() {
           </Row>
         </div>
         <div className="enter" style={{ ["--i" as string]: 7 }}>
-          <Toggle label="Follow cursor" checked={state.followCursor} onChange={(v) => set("followCursor", v)} />
+          <div className="flex flex-col gap-3">
+            <Toggle label="Follow cursor" checked={state.followCursor} onChange={(v) => set("followCursor", v)} />
+            <Toggle label="Sound" checked={sound} onChange={toggleSound} />
+          </div>
         </div>
         <div className="enter flex min-h-[150px] flex-1 flex-col compact:min-h-0" style={{ ["--i" as string]: 8 }}>
           <CodeBlock state={state} onReset={() => setState(INITIAL)} />
