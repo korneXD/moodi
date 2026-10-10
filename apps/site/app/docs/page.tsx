@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Moodi } from "moodi/react";
-import { MoodList, Palettes, PropsTable, ShapeNames } from "./parts";
+import { MoodList, Palettes, PropsTable, ReactPropsTable, ShapeNames } from "./parts";
 import { AUTHOR, GITHUB_URL, jsonLd, SITE_NAME, SITE_URL, TWITTER_HANDLE } from "@/lib/site";
 
 const DOCS_TITLE = "Docs";
@@ -138,6 +138,34 @@ export default function DocsPage() {
 
         <H2 id="props">Props</H2>
         <PropsTable />
+        <p className="mt-4 text-[14px] leading-relaxed text-muted">
+          Booleans on the Web Component take <code className="font-mono text-fg">&quot;true&quot;</code> /{" "}
+          <code className="font-mono text-fg">&quot;false&quot;</code>, e.g.{" "}
+          <code className="font-mono text-fg">sound=&quot;true&quot;</code>.
+        </p>
+
+        <h3 className="mb-3 mt-8 text-[15px] font-medium">React only</h3>
+        <ReactPropsTable />
+
+        <H2 id="sound">Sound</H2>
+        <p className="mb-4 text-[14px] leading-relaxed text-muted">
+          Off by default. Turn it on and every mood change plays a short sound effect, synthesized in the browser
+          (no audio files). It also plays once when the buddy first appears. Browsers only allow audio after a click,
+          tap or key press, so a sound requested before that waits a few seconds for the first one.
+        </p>
+        <Code>{`<Moodi mood="happy" sound />
+
+<moodi-buddy mood="happy" sound="true"></moodi-buddy>`}</Code>
+
+        <H2 id="loading">Fast first paint</H2>
+        <p className="mb-4 text-[14px] leading-relaxed text-muted">
+          Give the buddy a still image and let three.js load on the first interaction. The page paints the image
+          instantly and the live 3D buddy takes over without a visible swap.
+        </p>
+        <Code>{`<Moodi poster="/ghost-idle.webp" loading="interaction" />
+
+<!-- Web Component: any child is shown until the first 3D frame -->
+<moodi-buddy><img src="/ghost-idle.webp" alt="" /></moodi-buddy>`}</Code>
 
         <H2 id="moods">Moods</H2>
         <MoodList />
@@ -153,10 +181,13 @@ export default function DocsPage() {
         <Code>{`const el = document.querySelector('moodi-buddy');
 el.mood = 'thinking';
 el.react('happy', { duration: 1200 }); // temporary reaction, then back to the current mood
+el.sound = true;
 el.addEventListener('moodchange', (e) => console.log(e.detail));
-// e.detail: { mood, previous, reaction }`}</Code>
+// e.detail: { mood, previous, reaction }
+el.addEventListener('ready', () => {}); // first 3D frame drawn; the element also gets [ready]`}</Code>
         <p className="mt-4 text-[14px] leading-relaxed text-muted">
-          In React, pass a ref to reach the element, or use <code className="font-mono text-fg">onMoodChange</code>.
+          In React, pass a ref to reach the element, or use <code className="font-mono text-fg">onMoodChange</code> and{" "}
+          <code className="font-mono text-fg">onReady</code>.
         </p>
 
       </main>

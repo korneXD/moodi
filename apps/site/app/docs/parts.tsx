@@ -18,27 +18,29 @@ const PROPS: [prop: string, attr: string, type: string, def: string, desc: strin
   ["sound", "sound", "boolean", "false", "A short sound effect per mood, and when it first appears."],
 ];
 
-export function PropsTable() {
+function Table({ rows, attr }: { rows: string[][]; attr: boolean }) {
   return (
     <div className="no-scrollbar overflow-x-auto">
       <table className="w-full min-w-[640px] border-collapse text-left text-[13.5px]">
         <thead>
           <tr className="border-b border-line text-muted">
             <th className="py-2 pr-4 font-normal">Prop</th>
-            <th className="py-2 pr-4 font-normal">Attribute</th>
+            {attr && <th className="py-2 pr-4 font-normal">Attribute</th>}
             <th className="py-2 pr-4 font-normal">Type</th>
             <th className="py-2 pr-4 font-normal">Default</th>
             <th className="py-2 font-normal">Description</th>
           </tr>
         </thead>
         <tbody>
-          {PROPS.map(([prop, attr, type, def, desc]) => (
+          {rows.map(([prop, ...rest]) => (
             <tr key={prop} className="border-b border-line align-top">
               <td className="py-2.5 pr-4 font-mono text-[12.5px]">{prop}</td>
-              <td className="py-2.5 pr-4 font-mono text-[12.5px] text-muted">{attr}</td>
-              <td className="max-w-[180px] py-2.5 pr-4 font-mono text-[12.5px] text-muted">{type}</td>
-              <td className="py-2.5 pr-4 font-mono text-[12.5px] text-muted">{def}</td>
-              <td className="py-2.5 text-muted">{desc}</td>
+              {rest.slice(0, -1).map((cell, i) => (
+                <td key={i} className="max-w-[180px] py-2.5 pr-4 font-mono text-[12.5px] text-muted">
+                  {cell}
+                </td>
+              ))}
+              <td className="py-2.5 text-muted">{rest[rest.length - 1]}</td>
             </tr>
           ))}
         </tbody>
@@ -46,6 +48,17 @@ export function PropsTable() {
     </div>
   );
 }
+
+export const PropsTable = () => <Table rows={PROPS} attr />;
+
+const REACT_PROPS: [prop: string, type: string, def: string, desc: string][] = [
+  ["poster", "string", "—", "Image shown until the first 3D frame."],
+  ["loading", "'idle' | 'interaction' | 'eager'", "'idle'", "When three.js loads. 'interaction' waits for the first pointer, touch, key or scroll."],
+  ["onMoodChange", "(detail) => void", "—", "Same as the moodchange event."],
+  ["onReady", "() => void", "—", "The first 3D frame is on screen."],
+];
+
+export const ReactPropsTable = () => <Table rows={REACT_PROPS} attr={false} />;
 
 export function MoodList() {
   return (
