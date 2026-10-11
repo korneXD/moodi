@@ -52,8 +52,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { themeColor: "#0c0b0a" };
 
-// runs before paint so the stored theme never flashes
-const themeScript = `try{var t=localStorage.getItem('moodi-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}`;
+// runs before paint so the theme never flashes: a saved choice wins, else the OS preference
+const themeScript = `try{var t=localStorage.getItem('moodi-theme');if(t!=='light'&&t!=='dark')t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.dataset.theme=t}catch(e){}`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
