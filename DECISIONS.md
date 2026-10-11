@@ -226,3 +226,6 @@ color and the "Iris" palette entry, the site accent, and every generated image (
 app icons, OG images, README banner, posters). Its luminance (~0.056) sits just under the
 old auto-face threshold, so the threshold moved to 0.042: the default keeps black eyes and
 mouth, only very dark bodies like Ink get the latte face.
+- Favicons are a tightly cropped ghost on a warm cream rounded tile (`#f4efe8`), so the
+  indigo ghost is as large as possible and visible on light and dark tabs; the Apple icon
+  and the maskable icon are full-bleed squares (the OS rounds them).
