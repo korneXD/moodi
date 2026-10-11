@@ -63,3 +63,10 @@ export const ChevronIcon = (p: SVGProps<SVGSVGElement>) => (
     <path d="m6 9 6 6 6-6" />
   </svg>
 );
+
+export const FeedbackIcon = (p: SVGProps<SVGSVGElement>) => (
+  <svg {...base} {...p}>
+    <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
+    <path d="M15.8 9.2a2.5 2.5 0 0 0-3.5 0l-.3.4-.35-.3a2.42 2.42 0 1 0-3.2 3.6L12 16l3.6-3.6a2.5 2.5 0 0 0 .2-3.2Z" />
+  </svg>
+);

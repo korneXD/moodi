@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Moodi } from "moodi/react";
-import { GITHUB_URL } from "@/lib/site";
+import { FEEDBACK_URL, GITHUB_URL } from "@/lib/site";
+import { FeedbackIcon } from "./icons";
 
 const LINKS = [
   { href: "/", label: "Playground", id: "playground" },
@@ -32,6 +33,16 @@ export function SubHeader({ section, children }: { section: "docs" | "test"; chi
         ))}
         <a href={GITHUB_URL} className="hover:text-fg">
           GitHub
+        </a>
+        <a
+          href={FEEDBACK_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Send feedback (opens in a new tab)"
+          title="Feedback"
+          className="-mx-1.5 grid size-8 place-items-center rounded-lg hover:bg-chip hover:text-fg"
+        >
+          <FeedbackIcon />
         </a>
       </nav>
     </header>

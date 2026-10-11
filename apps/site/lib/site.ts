@@ -9,6 +9,7 @@ export const SITE_DESCRIPTION =
 export const SITE_OG_DESCRIPTION = "A soft 3D mood buddy for your UI. Drop it in with one line, React or Web Component. Free and open source.";
 
 export const GITHUB_URL = "https://github.com/korneXD/moodi";
+export const FEEDBACK_URL = "https://insigh.to/b/moodi";
 export const NPM_URL = "https://www.npmjs.com/package/moodi";
 export const TWITTER_HANDLE = "@itsk0rn3l";
 export const AUTHOR = { handle: "itsk0rn3l", name: "Kornel", url: "https://x.com/itsk0rn3l", avatar: "/creator.jpg" };

@@ -15,10 +15,10 @@ import {
   type Shape,
 } from "moodi/react";
 import { INITIAL, SETTLES, SIZE_MAX, SIZE_MIN, SPEEDS, type PlaygroundState } from "@/lib/state";
-import { AUTHOR, GITHUB_URL } from "@/lib/site";
+import { AUTHOR, FEEDBACK_URL, GITHUB_URL } from "@/lib/site";
 import { CodeBlock, useCopy } from "./code-block";
 import { Row, Segmented, Slider, Swatches, Toggle } from "./controls";
-import { CheckIcon, CopyIcon, GitHubIcon, MoonIcon, PauseIcon, SunIcon } from "./icons";
+import { CheckIcon, CopyIcon, FeedbackIcon, GitHubIcon, MoonIcon, PauseIcon, SunIcon } from "./icons";
 
 const BODY = Object.entries(PALETTES).map(([name, color]) => ({ name, color }));
 const FACE = [
@@ -414,6 +414,16 @@ function Header({ state }: { state: PlaygroundState }) {
             {copied ? <CheckIcon width={14} height={14} /> : <CopyIcon width={14} height={14} />}
           </span>
         </button>
+        <a
+          href={FEEDBACK_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="press grid size-8 place-items-center rounded-lg text-muted hover:text-fg"
+          aria-label="Send feedback (opens in a new tab)"
+          title="Feedback"
+        >
+          <FeedbackIcon />
+        </a>
         <a
           href={GITHUB_URL}
           className="press grid size-8 place-items-center rounded-lg text-muted hover:text-fg"
