@@ -158,6 +158,17 @@ export default function DocsPage() {
 
 <moodi-buddy mood="happy" sound="true"></moodi-buddy>`}</Code>
 
+        <H2 id="settle">Settle</H2>
+        <p className="mb-4 text-[14px] leading-relaxed text-muted">
+          Some moods keep moving: happy hops, error shakes, love floats with hearts. With{" "}
+          <code className="font-mono text-fg">settle</code> the buddy plays the mood for that many milliseconds, then its
+          body calms down to gentle idle breathing and the extras fade out, while the face keeps the expression. Every new
+          mood (or reaction) starts the timer again.
+        </p>
+        <Code>{`<Moodi mood={done ? 'happy' : 'idle'} settle={3000} />
+
+<moodi-buddy mood="happy" settle="3000"></moodi-buddy>`}</Code>
+
         <H2 id="loading">Fast first paint</H2>
         <p className="mb-4 text-[14px] leading-relaxed text-muted">
           Give the buddy a still image and let three.js load on the first interaction. The page paints the image

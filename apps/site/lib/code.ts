@@ -14,6 +14,7 @@ function props(s: PlaygroundState): Prop[] {
   if (s.color !== INITIAL.color) str('color', 'color', s.color);
   if (s.faceColor) str('faceColor', 'face-color', s.faceColor);
   if (s.cheekColor) str('cheekColor', 'cheek-color', s.cheekColor);
+  if (s.settle) out.push({ name: 'settle', attr: 'settle', value: String(s.settle), literal: true });
   if (s.size !== INITIAL.size) out.push({ name: 'size', attr: 'size', value: String(s.size), literal: true });
   if (s.speed !== INITIAL.speed) out.push({ name: 'speed', attr: 'speed', value: String(s.speed), literal: true });
   if (!s.followCursor) out.push({ name: 'followCursor', attr: 'follow-cursor', value: 'false', literal: true });

@@ -170,3 +170,13 @@ The "Hush" chat answers with a real model through `app/api/chat` (AI SDK 7 +
 - Without `OPENAI_API_KEY` (or on any error) the page falls back to the old canned replies,
   so the demo never breaks. The stream logic lives in `lib/chat-stream.ts` and was tested
   with `MockLanguageModelV4`.
+
+## Settle (0.3.0)
+
+`settle` (ms, default 0 = never): after a mood change the buddy plays the mood for that
+long, then its body eases (0.7 s) to the idle breathing pose and mood extras (hearts, Z's,
+bubbles, sound waves) fade out. The facial expression stays, so a waitlist success ends as
+a calm, smiling buddy instead of hopping forever. The timer restarts on every mood change
+or reaction. The playground has a "Settle after" control (Off/1s/3s/5s) that shows up in the
+generated code; the /test example uses it on the chat (4 s) and waitlist (3 s) buddies,
+and the chat buddy now sits on its own large card so its reactions are easy to follow.

@@ -320,48 +320,65 @@ export function LiveExample() {
           Tell Hush about your day and watch the buddy: it listens while you type, thinks while the AI writes back,
           speaks as the answer streams in, then shows the mood the AI picked for its reply.
         </p>
-        <div className="chat">
-          <div className="chat-head">
+        <div className="chat-wrap">
+          <div className="chat">
+            <div className="chat-head">
+              <span className="chat-dot" aria-hidden />
+              <div>
+                <strong>Hush</strong>
+                <span className="chat-status">{MOOD_LABEL[chatMood]}</span>
+              </div>
+            </div>
+            <div className="chat-list" ref={listRef} aria-live="polite">
+              {messages.map((m) => (
+                <p key={m.id} className={`msg msg-${m.from}`}>
+                  {m.text || "…"}
+                </p>
+              ))}
+            </div>
+            <form className="chat-form" onSubmit={send}>
+              <input
+                value={draft}
+                onChange={(e) => onDraft(e.target.value)}
+                placeholder="Today I feel…"
+                aria-label="Message"
+                maxLength={300}
+                disabled={busy}
+              />
+              <button className="btn btn-primary" type="submit" disabled={busy}>
+                Send
+              </button>
+            </form>
+          </div>
+          {/* the buddy gets its own big card, so every state change is easy to see */}
+          <div className="chat-buddy">
+            <span className="bubble">{MOOD_LABEL[chatMood]}</span>
             <Moodi
               ref={chatRef}
               shape="blob"
               color="#8fb996"
               mood={chatMood}
-              size={64}
+              size={240}
               sound={sound && chatInView}
+              settle={4000}
               loading="eager"
             />
-            <div>
-              <strong>Hush</strong>
-              <span className="chat-status">{MOOD_LABEL[chatMood]}</span>
-            </div>
           </div>
-          <div className="chat-list" ref={listRef} aria-live="polite">
-            {messages.map((m) => (
-              <p key={m.id} className={`msg msg-${m.from}`}>
-                {m.text || "…"}
-              </p>
-            ))}
-          </div>
-          <form className="chat-form" onSubmit={send}>
-            <input
-              value={draft}
-              onChange={(e) => onDraft(e.target.value)}
-              placeholder="Today I feel…"
-              aria-label="Message"
-              maxLength={300}
-              disabled={busy}
-            />
-            <button className="btn btn-primary" type="submit" disabled={busy}>
-              Send
-            </button>
-          </form>
         </div>
       </section>
 
       <section className="site-section" id="waitlist">
         <div className={`waitlist is-${formState}`}>
-          <Moodi ref={formRef} shape="cube" color="#f3d36b" mood={formMood} size={120} sound={sound && formInView} loading="eager" />
+          <Moodi
+            ref={formRef}
+            shape="cube"
+            color="#f3d36b"
+            mood={formMood}
+            size={120}
+            sound={sound && formInView}
+            settle={3000}
+            loading="eager"
+          />
           <div className="waitlist-body">
             <h2 className="site-h2">Join the waitlist.</h2>
             <form className="waitlist-form" onSubmit={join} noValidate>

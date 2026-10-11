@@ -16,6 +16,7 @@ const PROPS: [prop: string, attr: string, type: string, def: string, desc: strin
   ["interactive", "interactive", "boolean", "true", "Hover lift and a little reaction on click."],
   ["shadow", "shadow", "boolean", "true", "Soft ground shadow."],
   ["sound", "sound", "boolean", "false", "A short sound effect per mood, and when it first appears."],
+  ["settle", "settle", "number", "0", "ms after a mood change when the body calms to gentle breathing; the expression stays. 0 = never."],
 ];
 
 function Table({ rows, attr }: { rows: string[][]; attr: boolean }) {

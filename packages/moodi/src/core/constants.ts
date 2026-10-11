@@ -35,6 +35,11 @@ export interface MoodiProps {
   shadow?: boolean;
   /** A short sound effect on every mood change (and when it first appears). Default `false`. */
   sound?: boolean;
+  /**
+   * Milliseconds after a mood change when the body calms down to gentle idle breathing
+   * (hopping, shaking, hearts… stop; the facial expression stays). `0` = never. Default `0`.
+   */
+  settle?: number;
 }
 
 export interface MoodChangeDetail {
@@ -70,6 +75,7 @@ export const DEFAULTS = {
   interactive: true,
   shadow: true,
   sound: false,
+  settle: 0,
 };
 
 export const PALETTES: Readonly<Record<string, string>> = {

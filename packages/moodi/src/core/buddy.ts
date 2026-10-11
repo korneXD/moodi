@@ -42,6 +42,8 @@ export interface BuddyState {
   interactive: boolean;
   shadow: boolean;
   sound: boolean;
+  /** ms after which the body calms down; 0 = never */
+  settle: number;
 }
 
 const PIVOT = -0.85;
@@ -110,6 +112,9 @@ export class Buddy implements Tickable {
   private blend = 1;
   private reaction: { mood: Mood; left: number } | null = null;
   private pose = zeroPose();
+  private poseIdle = zeroPose();
+  /** real seconds since the current mood was shown (for `settle`) */
+  private moodTime = 0;
   private poseA = zeroPose();
   private poseB = zeroPose();
 
@@ -343,6 +348,7 @@ outgoingLight = mix(outgoingLight, diffuseColor.rgb * 1.12, emis * 0.65);
     this.prevTau = this.tau;
     this.shown = mood;
     this.tau = 0;
+    this.moodTime = 0;
     this.blend = 0;
     if (!env.reducedMotion) this.squashV -= 1.1;
     this.onMoodChange?.({ mood, previous, reaction: !!this.reaction });
@@ -366,8 +372,15 @@ outgoingLight = mix(outgoingLight, diffuseColor.rgb * 1.12, emis * 0.65);
       }
     }
 
+    // ---- settle: after `settle` ms in a mood, the body eases back to calm idle breathing
+    // and the extras fade out; the face keeps its expression
+    this.moodTime += dt;
+    const calm =
+      s.settle > 0 && this.shown !== 'idle' ? ease(Math.min(1, Math.max(0, (this.moodTime - s.settle / 1000) / 0.7))) : 0;
+
     // ---- body pose
     moodPose(this.shown, this.t, this.tau, this.poseB);
+    if (calm > 0) mixPose(this.poseB, moodPose('idle', this.t, this.tau, this.poseIdle), calm, this.poseB);
     if (this.blend < 1) {
       this.blend = Math.min(1, this.blend + dt / 0.45);
       moodPose(this.prevShown, this.t, this.prevTau, this.poseA);
@@ -452,7 +465,7 @@ outgoingLight = mix(outgoingLight, diffuseColor.rgb * 1.12, emis * 0.65);
     const ov = MOOD_OVERLAY[this.shown];
     const ko = damp(6, dt);
     for (const k of Object.keys(this.overlay) as OverlayKind[])
-      this.overlay[k] += ((ov === k ? 1 : 0) - this.overlay[k]) * ko;
+      this.overlay[k] += ((ov === k ? 1 - calm : 0) - this.overlay[k]) * ko;
 
     // ---- geometry
     if (this.morph < 1) {

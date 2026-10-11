@@ -775,3 +775,41 @@
     padding: 24px 16px 36px;
   }
 }
+
+/* ---------- Try it: chat + a big buddy ---------- */
+.tp .chat-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.8fr);
+  gap: 20px;
+  align-items: stretch;
+}
+.tp .chat-wrap .chat {
+  max-width: none;
+}
+.tp .chat-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--s-sage);
+  box-shadow: 0 0 0 4px #8fb99633;
+}
+.tp .chat-buddy {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 340px;
+  border: 1px solid var(--s-line);
+  border-radius: 24px;
+  background:
+    radial-gradient(60% 60% at 50% 48%, #8fb99640, transparent 70%),
+    var(--s-card);
+}
+@media (max-width: 760px) {
+  .tp .chat-wrap {
+    grid-template-columns: 1fr;
+  }
+  .tp .chat-buddy {
+    order: -1;
+    min-height: 260px;
+  }
+}

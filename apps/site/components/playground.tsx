@@ -14,7 +14,7 @@ import {
   type MoodiBuddyElement,
   type Shape,
 } from "moodi/react";
-import { INITIAL, SIZE_MAX, SIZE_MIN, SPEEDS, type PlaygroundState } from "@/lib/state";
+import { INITIAL, SETTLES, SIZE_MAX, SIZE_MIN, SPEEDS, type PlaygroundState } from "@/lib/state";
 import { AUTHOR, GITHUB_URL } from "@/lib/site";
 import { CodeBlock, useCopy } from "./code-block";
 import { Row, Segmented, Slider, Swatches, Toggle } from "./controls";
@@ -145,6 +145,7 @@ export function Playground() {
             loading={LOADING}
             poster={pristine && state.shape === "ghost" && shownMood === "idle" ? HERO_POSTER : undefined}
             sound={state.sound}
+            settle={state.settle}
             className="stage-buddy compact:!h-[min(72vw,340px)] compact:!w-[min(72vw,340px)]"
             // size scales the hero with a springy transform; the canvas keeps its resolution
             style={{
@@ -219,6 +220,16 @@ export function Playground() {
               options={SPEEDS.map((v) =>
                 v === 0 ? { value: v, label: <PauseIcon />, aria: "Pause" } : { value: v, label: `${v}×` },
               )}
+            />
+          </Row>
+        </div>
+        <div className="enter" style={{ ["--i" as string]: 6.8 }}>
+          <Row label="Settle after">
+            <Segmented
+              label="Settle after"
+              value={state.settle}
+              onChange={(v) => set("settle", v)}
+              options={SETTLES.map((v) => ({ value: v, label: v ? `${v / 1000}s` : "Off" }))}
             />
           </Row>
         </div>

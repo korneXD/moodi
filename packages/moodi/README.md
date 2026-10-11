@@ -74,6 +74,7 @@ With the Web Component, put an `<img>` inside `<moodi-buddy>`; it shows until th
 | `interactive`                 | `boolean`                                                    | `true`      | Hover lift, click reaction                    |
 | `shadow`                      | `boolean`                                                    | `true`      | Soft ground shadow                            |
 | `sound`                       | `boolean`                                                    | `false`     | Short synthesized effect per mood (and when it appears) |
+| `settle`                      | `number`                                                     | `0`         | ms after a mood change when the body calms to idle breathing (expression stays); `0` = never |
 
 Boolean attributes on the Web Component take `"true"` / `"false"`.
 
