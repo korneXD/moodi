@@ -232,6 +232,98 @@ function BuddyRow({ row, index }: { row: Row; index: number }) {
   );
 }
 
+const SETTLE_MOODS: Mood[] = ["happy", "error", "love", "surprised"];
+const SETTLE_TIMES = [1000, 2000, 3000];
+
+/** Side by side: the same mood with and without `settle`. */
+function SettleDemo() {
+  const [target, setTarget] = useState<Mood>("happy");
+  const [mood, setMood] = useState<Mood>("happy");
+  const [ms, setMs] = useState(2000);
+  const later = useRef<number | undefined>(undefined);
+  useEffect(() => () => clearTimeout(later.current), []);
+
+  // dropping to idle for a moment restarts the mood (and the settle timer)
+  const play = (m: Mood = target) => {
+    setTarget(m);
+    setMood("idle");
+    clearTimeout(later.current);
+    later.current = window.setTimeout(() => setMood(m), 120);
+  };
+
+  return (
+    <article className="row settle-demo" style={{ "--c": "#6c5ce7" } as CSSProperties}>
+      <div className="row-text">
+        <p className="method">
+          <span className="method-dot method-react" aria-hidden />
+          New in 0.3: <strong>settle</strong>
+        </p>
+        <h2>
+          <span className="index">07</span> Settle
+        </h2>
+        <p className="desc">
+          Some moods keep moving: happy hops, error shakes, love floats with hearts. <code>settle</code> lets the mood
+          play for a while, then the body calms down to gentle breathing while the face keeps its expression. Every new
+          mood restarts the timer.
+        </p>
+        <dl className="meta">
+          <div>
+            <dt>Mood</dt>
+            <dd className="pills">
+              {SETTLE_MOODS.map((m) => (
+                <button key={m} type="button" aria-pressed={target === m} onClick={() => play(m)}>
+                  {MOOD_INFO[m].label}
+                </button>
+              ))}
+            </dd>
+          </div>
+          <div>
+            <dt>Settle</dt>
+            <dd className="pills">
+              {SETTLE_TIMES.map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  aria-pressed={ms === t}
+                  onClick={() => {
+                    setMs(t);
+                    play();
+                  }}
+                >
+                  {t / 1000}s
+                </button>
+              ))}
+              <button type="button" className="replay" onClick={() => play()}>
+                ↻ Replay
+              </button>
+            </dd>
+          </div>
+        </dl>
+        <pre>
+          <code>
+            <span className="syn-tag">{"<Moodi"}</span> <span className="syn-kw">mood</span>=
+            <span className="syn-str">&quot;{target}&quot;</span> <span className="syn-kw">settle</span>=
+            <span className="syn-kw">{`{${ms}}`}</span> <span className="syn-tag">{"/>"}</span>
+          </code>
+        </pre>
+      </div>
+
+      <div className="stage settle-stage">
+        <div className="settle-pair">
+          <figure>
+            <Moodi mood={mood} size={150} loading="eager" />
+            <figcaption>without settle</figcaption>
+          </figure>
+          <figure>
+            <Moodi mood={mood} size={150} settle={ms} loading="eager" />
+            <figcaption>settle={ms}</figcaption>
+          </figure>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 export function ShapesTest() {
   return (
     <>
@@ -260,6 +352,7 @@ export function ShapesTest() {
           {ROWS.map((row, i) => (
             <BuddyRow key={row.shape} row={row} index={i} />
           ))}
+          <SettleDemo />
         </section>
       </main>
 
