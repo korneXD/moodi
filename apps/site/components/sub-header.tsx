@@ -32,7 +32,7 @@ export function SubHeader({ section, children }: { section: "docs" | "test"; chi
             {l.label}
           </Link>
         ))}
-        <a href={GITHUB_URL} className="hover:text-fg">
+        <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className="hover:text-fg">
           GitHub
         </a>
         <a

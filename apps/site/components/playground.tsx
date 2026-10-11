@@ -437,6 +437,8 @@ function Header({ state }: { state: PlaygroundState }) {
         </button>
         <a
           href={GITHUB_URL}
+          target="_blank"
+          rel="noopener noreferrer"
           className="press grid size-8 place-items-center rounded-lg text-muted hover:text-fg"
           aria-label="GitHub"
         >
