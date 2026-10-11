@@ -104,6 +104,8 @@ export function LiveExample() {
   const [chatMood, setChatMood] = useState<Mood>("idle");
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
+  /** the "Hush is typing…" bubble, between sending and the first words of the reply */
+  const [typing, setTyping] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     { id: 0, from: "bot", text: "Hi! How was your day? Write a few words, I'm listening." },
   ]);
@@ -112,7 +114,7 @@ export function LiveExample() {
 
   useEffect(() => {
     listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
-  }, [messages]);
+  }, [messages, typing]);
 
   const onDraft = (v: string) => {
     setDraft(v);
@@ -121,6 +123,7 @@ export function LiveExample() {
 
   /** Canned reply, typed out letter by letter: used when the AI isn't available. */
   const typeOut = (botId: number, reply: Reply) => {
+    setTyping(false);
     setChatMood("speaking");
     setMessages((m) => [...m, { id: botId, from: "bot", text: "" }]);
     const step = 24;
@@ -168,6 +171,7 @@ export function LiveExample() {
           text += msg.t;
           if (!started) {
             started = true;
+            setTyping(false);
             setChatMood("speaking");
             setMessages((m) => [...m, { id: botId, from: "bot", text }]);
           } else {
@@ -195,6 +199,7 @@ export function LiveExample() {
     setMessages(history);
     setDraft("");
     setBusy(true);
+    setTyping(true);
     setChatMood("thinking");
 
     const botId = nextId.current++;
@@ -335,6 +340,13 @@ export function LiveExample() {
                   {m.text || "…"}
                 </p>
               ))}
+              {typing && (
+                <p className="msg msg-bot typing" role="status" aria-label="Hush is typing">
+                  <span />
+                  <span />
+                  <span />
+                </p>
+              )}
             </div>
             <form className="chat-form" onSubmit={send}>
               <input
