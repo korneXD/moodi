@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "OG card", robots: { index: false } }
  */
 export default function OgCard() {
   return (
-    <div className="relative flex h-[630px] w-[1200px] items-center overflow-hidden bg-bg" style={{ ["--accent" as string]: "#6c5ce7" }}>
+    <div className="relative flex h-[630px] w-[1200px] items-center overflow-hidden bg-bg" style={{ ["--accent" as string]: "#2b15d1" }}>
       <div className="stage-glow absolute right-[40px] top-1/2 size-[760px] -translate-y-1/2" />
       <div className="relative z-10 pl-[96px]">
         <div className="text-[112px] font-semibold leading-none tracking-[-0.05em]">moodi</div>

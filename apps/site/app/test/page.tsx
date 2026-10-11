@@ -9,7 +9,7 @@ const youngSerif = Young_Serif({ subsets: ["latin"], weight: "400", variable: "-
 const DESCRIPTION =
   "Every moodi shape loaded three ways (React, Web Component, CDN), plus a live example: a mood picker, a chat and a waitlist form.";
 const OG_IMAGE = {
-  url: "/opengraph-docs-v1.png",
+  url: "/opengraph-docs-v2.png",
   width: 1200,
   height: 630,
   type: "image/png",

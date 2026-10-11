@@ -17,7 +17,7 @@ export interface MoodiProps {
   shape?: Shape;
   /** Current mood / state. Default `'idle'`. */
   mood?: Mood;
-  /** Body color, any CSS color. Default `'#6c5ce7'`. */
+  /** Body color, any CSS color. Default `'#2b15d1'`. */
   color?: string;
   /** Eyes / mouth color. Auto-contrast by default. */
   faceColor?: string;
@@ -73,7 +73,7 @@ export const MOODS: readonly Mood[] = [
 export const DEFAULTS = {
   shape: 'ghost' as Shape,
   mood: 'idle' as Mood,
-  color: '#6c5ce7',
+  color: '#2b15d1',
   size: 160 as number | string,
   speed: 1,
   followCursor: true,
@@ -84,7 +84,7 @@ export const DEFAULTS = {
 };
 
 export const PALETTES: Readonly<Record<string, string>> = {
-  Iris: '#6c5ce7',
+  Iris: '#2b15d1',
   Peach: '#f2a07b',
   Sage: '#8fb996',
   Sky: '#8ec5e8',

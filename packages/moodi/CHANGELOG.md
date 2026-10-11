@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.0
+
+- New default color `#2b15d1` (also the `Iris` palette entry); black face by default.
+
 ## 0.4.0
 
 - `settle-mood` (React `settleMood`): with `settle`, switch to this mood once the time is

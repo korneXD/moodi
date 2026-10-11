@@ -7,7 +7,7 @@ import { Moodi, MOOD_INFO, MOODS, PALETTES, SHAPE_LABELS, SHAPES } from "moodi/r
 const PROPS: [prop: string, attr: string, type: string, def: string, desc: string][] = [
   ["shape", "shape", SHAPES.map((s) => `'${s}'`).join(" | "), "'ghost'", "Body shape."],
   ["mood", "mood", "Mood", "'idle'", "Current state. Changes are interpolated, never instant."],
-  ["color", "color", "string", "'#6c5ce7'", "Body color, any CSS color."],
+  ["color", "color", "string", "'#2b15d1'", "Body color, any CSS color."],
   ["faceColor", "face-color", "string", "auto", "Eyes and mouth. Auto-contrasts with the body."],
   ["cheekColor", "cheek-color", "string", "auto", "Blush. Derived from the body color."],
   ["size", "size", "number | string", "160", "px number or any CSS length."],

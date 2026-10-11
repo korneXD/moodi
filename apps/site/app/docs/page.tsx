@@ -10,7 +10,7 @@ const DOCS_DESCRIPTION =
 const DOCS_OG_DESCRIPTION = "Install moodi, then pick a shape, a mood and a color. React, Web Component or CDN.";
 // Versioned like the home image: link previews cache by URL. Regenerate from /og/docs.
 const DOCS_OG_IMAGE = {
-  url: "/opengraph-docs-v1.png",
+  url: "/opengraph-docs-v2.png",
   width: 1200,
   height: 630,
   type: "image/png",
@@ -112,7 +112,7 @@ export default function DocsPage() {
           </div>
           <div>
             <h3 className="mb-2 text-[14px] text-muted">Web Component</h3>
-            <Code>{`<moodi-buddy shape="ghost" mood="happy" color="#6c5ce7" size="160"></moodi-buddy>
+            <Code>{`<moodi-buddy shape="ghost" mood="happy" color="#2b15d1" size="160"></moodi-buddy>
 <script type="module">import 'moodi';</script>`}</Code>
           </div>
           <div>

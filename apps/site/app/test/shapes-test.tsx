@@ -40,7 +40,7 @@ const ROWS: Row[] = [
     name: "Ghost",
     description: "The default shape. A wavy hem and a floating body: the classic little ghost.",
     method: "react",
-    color: "#6c5ce7",
+    color: "#2b15d1",
     colorName: "Iris",
     mood: "happy",
     sound: true,
@@ -254,7 +254,7 @@ function SettleDemo() {
   };
 
   return (
-    <article className="row settle-demo" style={{ "--c": "#6c5ce7" } as CSSProperties}>
+    <article className="row settle-demo" style={{ "--c": "#2b15d1" } as CSSProperties}>
       <div className="row-text">
         <p className="method">
           <span className="method-dot method-react" aria-hidden />

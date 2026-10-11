@@ -13,7 +13,7 @@
 @property --accent {
   syntax: "<color>";
   inherits: true;
-  initial-value: #6c5ce7;
+  initial-value: #2b15d1;
 }
 
 :root {

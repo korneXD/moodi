@@ -24,7 +24,7 @@ npm i moodi three
 ### Web Component
 
 ```html
-<moodi-buddy shape="ghost" mood="happy" color="#6c5ce7" size="160"></moodi-buddy>
+<moodi-buddy shape="ghost" mood="happy" color="#2b15d1" size="160"></moodi-buddy>
 <script type="module">import 'moodi';</script>
 ```
 
@@ -65,7 +65,7 @@ With the Web Component, put an `<img>` inside `<moodi-buddy>`; it shows until th
 | ----------------------------- | ------------------------------------------------------------ | ----------- | --------------------------------------------- |
 | `shape`                       | `'ghost' \| 'pebble' \| 'blob' \| 'drop' \| 'bean' \| 'cube'` | `'ghost'`   | Body shape                                    |
 | `mood`                        | `Mood` (see below)                                           | `'idle'`    | Changes are interpolated, never instant       |
-| `color`                       | any CSS color                                                | `'#6c5ce7'` | Body color                                    |
+| `color`                       | any CSS color                                                | `'#2b15d1'` | Body color                                    |
 | `faceColor` (`face-color`)    | any CSS color                                                | auto        | Eyes & mouth, auto-contrast with the body     |
 | `cheekColor` (`cheek-color`)  | any CSS color                                                | auto        | Blush, derived from the body color            |
 | `size`                        | `number \| string`                                           | `160`       | px, or any CSS length (`"10rem"`, `"40vw"`)   |

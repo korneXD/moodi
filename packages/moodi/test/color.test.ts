@@ -4,7 +4,7 @@ import { DEFAULTS, isMood, isShape, MOODS, PALETTES, SHAPES } from '../src/core/
 
 describe('color', () => {
   it('parses hex without a browser', () => {
-    expect(parseColor('#6c5ce7', [0, 0, 0])).toEqual([0x6c / 255, 0x5c / 255, 0xe7 / 255]);
+    expect(parseColor('#2b15d1', [0, 0, 0])).toEqual([0x2b / 255, 0x15 / 255, 0xd1 / 255]);
     expect(parseColor('fff', [0, 0, 0])).toEqual([1, 1, 1]);
     expect(parseColor(undefined, [0.1, 0.2, 0.3])).toEqual([0.1, 0.2, 0.3]);
   });

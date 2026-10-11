@@ -46,8 +46,8 @@ const INK: RGB = [0.07, 0.06, 0.08];
 const CREAM: RGB = [209 / 255, 190 / 255, 173 / 255];
 const ROSE: RGB = [1, 0.42, 0.48];
 
-/** Near-black on most bodies (the default Iris included), latte only on very dark ones like Ink. */
-export const autoFace = (body: RGB): RGB => (luminance(body) > 0.06 ? mix(INK, body, 0.06) : CREAM);
+/** Near-black on most bodies (the default #2b15d1 included), latte only on very dark ones like Ink. */
+export const autoFace = (body: RGB): RGB => (luminance(body) > 0.042 ? mix(INK, body, 0.06) : CREAM);
 
 /** Blush that sits naturally on the body color. */
 export const autoCheek = (body: RGB): RGB => mix(body, ROSE, 0.78);

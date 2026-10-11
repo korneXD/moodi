@@ -7,7 +7,7 @@ Choices made where the spec left room, or where the owner changed it.
 - **Site stack: Next.js 16 + Tailwind CSS 4 on Vercel** (spec suggested Vite + React or Astro).
   It also doubles as the milestone-5 SSR test: every page imports `moodi/react` and is
   statically prerendered.
-- **Defaults: `shape="ghost"`, `color="#6c5ce7"`** ("Iris", a darker blue-violet) instead of
+- **Defaults: `shape="ghost"`, `color="#2b15d1"`** ("Iris", the brand indigo; was #6c5ce7) instead of
   pebble / peach. Iris is the first palette entry; Lilac stays.
 - **No URL query params.** The spec mirrored state into `?shape=…`; the owner did not want
   that in the address bar, so the playground keeps state in memory only.
@@ -53,7 +53,7 @@ Choices made where the spec left room, or where the owner changed it.
   neighbours (`oklch(from …)`), blended `screen` on dark and `multiply` on light.
 - `/lab` renders the full shape × mood matrix for visual checks (noindex).
 - `/og`, `/og/icon` (happy, black face, red cheeks) and `/og/readme` (same face) are compositions used to regenerate
-  `public/opengraph-v2.png`, `app/icon.png`, `app/apple-icon.png` and
+  `public/opengraph-v3.png`, `app/icon.png`, `app/apple-icon.png` and
   `.github/assets/readme.png` from a real render (headless screenshot), not a drawing.
 - Domain: `getmoodi.dev`. Like roastfast, the `www.` host is canonical and the apex
   redirects to it (308). `NEXT_PUBLIC_SITE_URL=https://www.getmoodi.dev` on Vercel;
@@ -65,7 +65,7 @@ Choices made where the spec left room, or where the owner changed it.
   description, a ≤120-char OG description, the X handle and `jsonLd()`.
 - Root metadata: title template `%s | moodi`, keywords, category, author/creator, robots with
   `max-image-preview: large`, Open Graph + Twitter `summary_large_image` with a versioned
-  image (`public/opengraph-v2.png`; bump the number whenever the picture changes, link
+  image (`public/opengraph-v3.png`; bump the number whenever the picture changes, link
   previews cache by URL). Pages set `alternates.canonical`.
 - `robots.ts` (disallows `/lab` and `/og`), `sitemap.ts` (`/`, `/docs`), a
   `SoftwareApplication` JSON-LD with the creator on the home page, a noindex 404.
@@ -76,7 +76,7 @@ Choices made where the spec left room, or where the owner changed it.
   pnpm monorepo (the npm package lives next to the site), so the project's root directory
   is `apps/site`.
 - Also shipped: `favicon.ico` (16/32/48), a web manifest with 192/512 and maskable icons,
-  `appleWebApp`, a docs-specific OG/Twitter card (`public/opengraph-docs-v1.png`, rendered
+  `appleWebApp`, a docs-specific OG/Twitter card (`public/opengraph-docs-v2.png`, rendered
   from `/og/docs`) with `TechArticle` + `BreadcrumbList` JSON-LD, `/llms.txt` and
   `/.well-known/security.txt` (expires 2027-10-10, renew before then).
 
@@ -218,3 +218,11 @@ the aria-label report the switch. Typical use: `mood={saved ? 'happy' : 'idle'} 
 settleMood="idle"` celebrates a success for 2 s and goes back to rest. A new mood or a
 reaction restarts the timer; without `settle` it does nothing. The playground's "Then"
 control, the /test settle demo and the Hush chat (happy → idle after 4 s) use it.
+
+## Brand color #2b15d1 (0.5.0)
+
+The owner's brand color `#2b15d1`, a deep indigo, replaces `#6c5ce7` as the default body
+color and the "Iris" palette entry, the site accent, and every generated image (favicon,
+app icons, OG images, README banner, posters). Its luminance (~0.056) sits just under the
+old auto-face threshold, so the threshold moved to 0.042: the default keeps black eyes and
+mouth, only very dark bodies like Ink get the latte face.

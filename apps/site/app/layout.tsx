@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 // A new file name whenever the picture changes: X, Facebook, LinkedIn and Slack cache a link preview by its image URL.
 // Regenerate it by screenshotting /og at 1200×630.
 const OG_IMAGE = {
-  url: "/opengraph-v2.png",
+  url: "/opengraph-v3.png",
   width: 1200,
   height: 630,
   type: "image/png",

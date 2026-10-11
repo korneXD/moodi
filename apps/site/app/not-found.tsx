@@ -10,7 +10,7 @@ export default function NotFound() {
       <div
         aria-hidden
         className="stage-glow pointer-events-none absolute left-1/2 top-[42%] aspect-square w-[min(90vw,620px)] -translate-x-1/2 -translate-y-1/2"
-        style={{ ["--accent" as string]: "#6c5ce7" }}
+        style={{ ["--accent" as string]: "#2b15d1" }}
       />
       <div className="relative flex flex-col items-center">
         <Moodi mood="error" size={240} loading="eager" aria-label="moodi: error" />

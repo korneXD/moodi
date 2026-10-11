@@ -305,7 +305,7 @@ export function ColorPicker({
         />
       </button>
       {anchor && (
-        <Panel value={normalizeHex(value ?? base) ?? "#6c5ce7"} label={label} onChange={onChange} onClose={close} anchor={anchor} />
+        <Panel value={normalizeHex(value ?? base) ?? "#2b15d1"} label={label} onChange={onChange} onClose={close} anchor={anchor} />
       )}
     </>
   );
