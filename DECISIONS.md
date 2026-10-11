@@ -153,3 +153,20 @@ two tabs on one page (`#test`, `#example`):
 
 Styles are scoped under `.tp` (`app/test/test.css`) and use the site's theme tokens. The CSP
 allows `https://esm.sh` for the CDN row.
+
+## AI chat on /test
+
+The "Hush" chat answers with a real model through `app/api/chat` (AI SDK 7 +
+`@ai-sdk/openai`, the owner's own OpenAI key; AI Gateway was offered and declined).
+
+- The model returns `{ mood, reply }` via structured output (`Output.object`); the route
+  streams the reply as NDJSON chunks and sends the mood last. The buddy thinks until the
+  first words arrive, speaks while they stream, then shows the mood the model picked.
+- Default model `gpt-4.1-mini` (fast, cheap, no reasoning delay), override with
+  `OPENAI_MODEL`. Replies are capped at 200 output tokens and 1–2 sentences.
+- Guard rails for a public demo: same-origin only, best-effort per-IP limits (8/min,
+  40/hour, in memory), 300-character messages, only the last 8 turns sent, a system prompt
+  that keeps to the topic and points to emergency help for self-harm mentions.
+- Without `OPENAI_API_KEY` (or on any error) the page falls back to the old canned replies,
+  so the demo never breaks. The stream logic lives in `lib/chat-stream.ts` and was tested
+  with `MockLanguageModelV4`.

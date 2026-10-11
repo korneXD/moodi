@@ -10,12 +10,15 @@
     "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^4.0.91",
     "@datafast/ai-crawl": "^1.0.9",
+    "ai": "^7.0.137",
     "moodi": "workspace:*",
     "next": "16.4.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "three": "^0.186.1"
+    "three": "^0.186.1",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",

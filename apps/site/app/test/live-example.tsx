@@ -119,35 +119,90 @@ export function LiveExample() {
     if (!busy) setChatMood(v.trim() ? "listening" : "idle");
   };
 
+  /** Canned reply, typed out letter by letter: used when the AI isn't available. */
+  const typeOut = (botId: number, reply: Reply) => {
+    setChatMood("speaking");
+    setMessages((m) => [...m, { id: botId, from: "bot", text: "" }]);
+    const step = 24;
+    for (let i = 1; i <= reply.text.length; i++) {
+      later(() => {
+        setMessages((m) => m.map((msg) => (msg.id === botId ? { ...msg, text: reply.text.slice(0, i) } : msg)));
+      }, i * step);
+    }
+    later(() => {
+      setChatMood(reply.mood);
+      setBusy(false);
+    }, reply.text.length * step + 150);
+  };
+
+  /**
+   * Real replies from /api/chat: the buddy thinks until the first words arrive, speaks while
+   * they stream in, then shows the mood the model picked for its answer.
+   */
+  const askAI = async (history: Message[], botId: number) => {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ messages: history.filter((m) => m.text).map(({ from, text }) => ({ from, text })) }),
+    });
+    if (res.status === 429) return typeOut(botId, { text: "I need a little breather. Try again in a minute?", mood: "sleeping" });
+    if (!res.ok || !res.body) throw new Error(String(res.status));
+
+    const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
+    let buffer = "";
+    let text = "";
+    let mood: Mood = "idle";
+    let started = false;
+    for (;;) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffer += value;
+      const lines = buffer.split("\n");
+      buffer = lines.pop() ?? "";
+      for (const line of lines) {
+        if (!line.trim()) continue;
+        const msg = JSON.parse(line) as { t?: string; mood?: Mood; error?: string };
+        if (msg.error) throw new Error(msg.error);
+        if (msg.mood) mood = msg.mood;
+        if (msg.t) {
+          text += msg.t;
+          if (!started) {
+            started = true;
+            setChatMood("speaking");
+            setMessages((m) => [...m, { id: botId, from: "bot", text }]);
+          } else {
+            const now = text;
+            setMessages((m) => m.map((x) => (x.id === botId ? { ...x, text: now } : x)));
+          }
+        }
+      }
+    }
+    if (!started) throw new Error("empty");
+    setChatMood(mood);
+    setBusy(false);
+  };
+
   const send = (e: FormEvent) => {
     e.preventDefault();
     if (busy) return;
-    const text = draft.trim();
+    const text = draft.trim().slice(0, 300);
     if (!text) {
       chatRef.current?.react("error", { duration: 1000 });
       return;
     }
-    setMessages((m) => [...m, { id: nextId.current++, from: "me", text }]);
+    const mine: Message = { id: nextId.current++, from: "me", text };
+    const history = [...messages, mine];
+    setMessages(history);
     setDraft("");
     setBusy(true);
     setChatMood("thinking");
 
-    const reply = pickReply(text);
     const botId = nextId.current++;
-    later(() => {
-      setChatMood("speaking");
-      setMessages((m) => [...m, { id: botId, from: "bot", text: "" }]);
-      const step = 24;
-      for (let i = 1; i <= reply.text.length; i++) {
-        later(() => {
-          setMessages((m) => m.map((msg) => (msg.id === botId ? { ...msg, text: reply.text.slice(0, i) } : msg)));
-        }, i * step);
-      }
-      later(() => {
-        setChatMood(reply.mood);
-        setBusy(false);
-      }, reply.text.length * step + 150);
-    }, 1300);
+    askAI(history, botId).catch(() => {
+      // no key, offline or a hiccup: the demo still answers, just with canned lines
+      setMessages((m) => m.filter((x) => x.id !== botId));
+      typeOut(botId, pickReply(text));
+    });
   };
 
   // ---------- Waitlist ----------
@@ -262,8 +317,8 @@ export function LiveExample() {
       <section className="site-section" id="try">
         <h2 className="site-h2">Try it now.</h2>
         <p className="site-sub narrow">
-          Write a sentence about your day and watch the buddy: it listens while you type, thinks after you send, then
-          replies. Try &ldquo;I&rsquo;m tired&rdquo; or &ldquo;I had a great day&rdquo;.
+          Tell Hush about your day and watch the buddy: it listens while you type, thinks while the AI writes back,
+          speaks as the answer streams in, then shows the mood the AI picked for its reply.
         </p>
         <div className="chat">
           <div className="chat-head">
@@ -294,6 +349,7 @@ export function LiveExample() {
               onChange={(e) => onDraft(e.target.value)}
               placeholder="Today I feel…"
               aria-label="Message"
+              maxLength={300}
               disabled={busy}
             />
             <button className="btn btn-primary" type="submit" disabled={busy}>
