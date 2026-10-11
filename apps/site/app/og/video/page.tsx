@@ -11,10 +11,12 @@ import { Moodi, type Mood, type Shape } from "moodi/react";
 
 const hand = Caveat({ subsets: ["latin"], weight: ["500", "700"] });
 
-const INK = "#1f1a16";
+const INK = "#efe7da"; // light ink on a dark page
 const BRAND = "#2b15d1";
+/** the brand, lifted so text and strokes read on the dark page */
+const BRAND_INK = "#8f84ff";
 const RED = "#e8424f";
-const PAPER = "#f6f1e7";
+const PAPER = "#121116";
 const DURATION = 18.6;
 
 const clamp = (x: number) => Math.min(1, Math.max(0, x));
@@ -162,14 +164,21 @@ export default function Video() {
         </filter>
         <filter id="paper">
           <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="3" />
-          <feColorMatrix values="0 0 0 0 0.45  0 0 0 0 0.38  0 0 0 0 0.3  0 0 0 0.09 0" />
+          <feColorMatrix values="0 0 0 0 0.9  0 0 0 0 0.85  0 0 0 0 0.8  0 0 0 0.05 0" />
         </filter>
       </svg>
       {/* paper grain + faint ruled lines */}
       <svg style={{ position: "absolute", inset: 0 }} width="1920" height="1080" aria-hidden>
+        <defs>
+          <radialGradient id="glow" cx="50%" cy="52%" r="55%">
+            <stop offset="0" stopColor="#2b15d1" stopOpacity="0.28" />
+            <stop offset="1" stopColor="#2b15d1" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <rect width="1920" height="1080" fill="url(#glow)" />
         <rect width="1920" height="1080" filter="url(#paper)" />
         {Array.from({ length: 14 }, (_, i) => (
-          <line key={i} x1="0" x2="1920" y1={80 + i * 74} y2={80 + i * 74} stroke="#d9cfbf" strokeWidth="1" opacity="0.45" />
+          <line key={i} x1="0" x2="1920" y1={80 + i * 74} y2={80 + i * 74} stroke="#2c2934" strokeWidth="1" opacity="0.8" />
         ))}
       </svg>
 
@@ -180,7 +189,7 @@ export default function Video() {
         <Write progress={p(t, 1.4, 2.4)} style={{ left: 780, top: 800, fontSize: 120, fontWeight: 700 }}>
           meet moodi
         </Write>
-        <Stroke box="0 0 300 40" d="M5 25 C 80 10 160 35 290 12" progress={p(t, 2.3, 2.8)} color={BRAND} width={7} style={{ left: 820, top: 935, width: 300, height: 40 }} />
+        <Stroke box="0 0 300 40" d="M5 25 C 80 10 160 35 290 12" progress={p(t, 2.3, 2.8)} color={BRAND_INK} width={7} style={{ left: 820, top: 935, width: 300, height: 40 }} />
       </Scene>
 
       {/* 2 · it shows what your UI is doing */}
@@ -202,13 +211,13 @@ export default function Video() {
                 left: n.x,
                 top: n.y,
                 padding: "14px 30px 18px",
-                background: n.label === "done!" ? "#ffe6a8" : "#fff8d8",
-                boxShadow: "0 6px 0 rgba(31,26,22,0.08)",
+                background: n.label === "done!" ? "#2f2814" : "#1f1d26",
+                boxShadow: "0 6px 0 rgba(0,0,0,0.35)",
                 border: `3px solid ${INK}`,
                 borderRadius: "14px 18px 12px 20px",
                 fontSize: 64,
                 fontWeight: 700,
-                color: INK,
+                color: n.label === "done!" ? "#ffd479" : INK,
                 transform: `rotate(${n.rot}deg) scale(${back(p(t, n.at, n.at + 0.45))})`,
               }}
             >
@@ -217,7 +226,7 @@ export default function Video() {
             <Stroke box="0 0 1920 1080" d={ARROW(n.to[0], n.to[1], n.to[2], n.to[3])} progress={p(t, n.at + 0.3, n.at + 0.8)} width={5} style={{ left: 0, top: 0, width: 1920, height: 1080 }} />
           </div>
         ))}
-        <Stroke box="0 0 120 100" d="M10 55 L 45 88 L 112 10" progress={p(t, 7.0, 7.4)} color="#2f9e57" width={11} style={{ left: 1675, top: 720, width: 110, height: 92 }} />
+        <Stroke box="0 0 120 100" d="M10 55 L 45 88 L 112 10" progress={p(t, 7.0, 7.4)} color="#5bd88a" width={11} style={{ left: 1675, top: 720, width: 110, height: 92 }} />
       </Scene>
 
       {/* 3 · pick a shape */}
@@ -234,7 +243,7 @@ export default function Video() {
             </Write>
           </div>
         ))}
-        <Write progress={p(t, 10.4, 11.0)} style={{ left: 760, top: 900, fontSize: 64, fontWeight: 500, color: BRAND }}>
+        <Write progress={p(t, 10.4, 11.0)} style={{ left: 760, top: 900, fontSize: 64, fontWeight: 500, color: BRAND_INK }}>
           + any color you like
         </Write>
       </Scene>
@@ -252,18 +261,18 @@ export default function Video() {
             top: 380,
             width: 820,
             padding: "56px 60px",
-            background: "#fffdf7",
+            background: "#1a1820",
             border: `3px solid ${INK}`,
             borderRadius: "22px 16px 26px 18px",
             transform: `rotate(-2deg) translateY(${(1 - back(p(t, 11.9, 12.4))) * 40}px)`,
             opacity: p(t, 11.85, 12.1),
-            boxShadow: "8px 10px 0 rgba(31,26,22,0.1)",
+            boxShadow: "8px 10px 0 rgba(0,0,0,0.35)",
             fontSize: 76,
             fontWeight: 700,
             color: INK,
           }}
         >
-          <span style={{ color: BRAND }}>{typed}</span>
+          <span style={{ color: BRAND_INK }}>{typed}</span>
           <span style={{ opacity: Math.floor(t * 3) % 2 ? 1 : 0 }}>|</span>
         </div>
         <Stroke box="0 0 1920 1080" d={ARROW(1000, 520, 1230, 560)} progress={p(t, 13.3, 13.8)} width={6} style={{ left: 0, top: 0, width: 1920, height: 1080 }} />
@@ -276,11 +285,11 @@ export default function Video() {
         <Write progress={p(t, 15.7, 16.4)} style={{ left: 880, top: 280, fontSize: 230, fontWeight: 700, lineHeight: 1 }}>
           moodi
         </Write>
-        <Stroke box="0 0 560 40" d="M5 28 C 140 6 300 34 550 12" progress={p(t, 16.3, 16.8)} color={BRAND} width={10} style={{ left: 890, top: 520, width: 560, height: 40 }} />
+        <Stroke box="0 0 560 40" d="M5 28 C 140 6 300 34 550 12" progress={p(t, 16.3, 16.8)} color={BRAND_INK} width={10} style={{ left: 890, top: 520, width: 560, height: 40 }} />
         <Write progress={p(t, 16.6, 17.3)} style={{ left: 890, top: 580, fontSize: 64, fontWeight: 500 }}>
           tiny 3D mood buddies for your UI
         </Write>
-        <Write progress={p(t, 17.2, 17.8)} style={{ left: 890, top: 690, fontSize: 70, fontWeight: 700, color: BRAND }}>
+        <Write progress={p(t, 17.2, 17.8)} style={{ left: 890, top: 690, fontSize: 70, fontWeight: 700, color: BRAND_INK }}>
           npm i moodi · getmoodi.dev
         </Write>
       </Scene>

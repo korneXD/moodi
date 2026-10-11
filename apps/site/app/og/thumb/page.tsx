@@ -5,8 +5,8 @@ import { Moodi, type Mood } from "moodi/react";
 
 /**
  * Product Hunt thumbnail source (240×240, cream tile). With ?capture the clock waits for
- * window.__go; the mood runs happy → love → happy. speed 0 keeps the body still so the
- * first and last frames match and the GIF loops without a jump.
+ * window.__go; the mood runs happy → love → happy, each settling after 1.5 s so the body
+ * is back to calm breathing at both ends (the recorder crossfades the seam).
  */
 export default function Thumb() {
   const [t, setT] = useState(0);
@@ -25,7 +25,7 @@ export default function Thumb() {
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
   }, []);
-  const mood: Mood = t > 1.2 && t < 3.4 ? "love" : "happy";
+  const mood: Mood = t > 1.0 && t < 3.4 ? "love" : "happy";
   return (
     <>
       <style>{`html,body{background:#f4efe8!important}`}</style>
@@ -34,7 +34,7 @@ export default function Thumb() {
           mood={mood}
           cheekColor="#e8424f"
           size={300}
-          speed={0}
+          settle={1500}
           shadow={false}
           followCursor={false}
           interactive={false}
