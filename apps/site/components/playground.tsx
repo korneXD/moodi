@@ -415,16 +415,6 @@ function Header({ state }: { state: PlaygroundState }) {
           </span>
         </button>
         <a
-          href={FEEDBACK_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="press grid size-8 place-items-center rounded-lg text-muted hover:text-fg"
-          aria-label="Send feedback (opens in a new tab)"
-          title="Feedback"
-        >
-          <FeedbackIcon />
-        </a>
-        <a
           href={GITHUB_URL}
           className="press grid size-8 place-items-center rounded-lg text-muted hover:text-fg"
           aria-label="GitHub"
@@ -445,6 +435,16 @@ function Header({ state }: { state: PlaygroundState }) {
         >
           {theme === "dark" ? <SunIcon /> : <MoonIcon />}
         </button>
+        <a
+          href={FEEDBACK_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="press grid size-8 place-items-center rounded-lg text-muted hover:text-fg"
+          aria-label="Send feedback (opens in a new tab)"
+          title="Feedback"
+        >
+          <FeedbackIcon />
+        </a>
       </div>
     </header>
   );

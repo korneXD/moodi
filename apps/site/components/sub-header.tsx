@@ -1,6 +1,5 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { Moodi } from "moodi/react";
 import { FEEDBACK_URL, GITHUB_URL } from "@/lib/site";
 import { FeedbackIcon } from "./icons";
 
@@ -15,7 +14,9 @@ export function SubHeader({ section, children }: { section: "docs" | "test"; chi
   return (
     <header className="sticky top-0 z-20 grid h-14 grid-cols-[1fr_auto_1fr] items-center gap-3 border-b border-line bg-bg/85 px-5 backdrop-blur max-sm:px-4">
       <Link href="/" className="flex items-center gap-1.5 justify-self-start">
-        <Moodi size={30} loading="interaction" poster="/posters/logo.webp" interactive={false} shadow={false} aria-hidden />
+        {/* a still, not the live 3D buddy: that one belongs to the playground */}
+        {/* eslint-disable-next-line @next/next/no-img-element -- 60px static logo */}
+        <img src="/posters/logo.webp" alt="" width={30} height={30} className="size-[30px]" />
         <span className="text-[17px] font-semibold tracking-[-0.03em]">moodi</span>
         <span className="ml-2 text-[13px] text-muted">{section}</span>
       </Link>
