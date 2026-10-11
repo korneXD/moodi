@@ -3,7 +3,7 @@ import { Moodi } from "moodi/react";
 
 export const metadata: Metadata = { title: "README banner", robots: { index: false } };
 
-/** README banner (.github/assets/readme.png): thinking, black face. Screenshot at 1200×630. */
+/** README banner (.github/assets/readme.png): happy, black face, red cheeks. Screenshot at 1200×630. */
 export default function ReadmeCard() {
   return (
     <div className="relative flex h-[630px] w-[1200px] items-center overflow-hidden bg-bg" style={{ ["--accent" as string]: "#6c5ce7" }}>
@@ -16,7 +16,7 @@ export default function ReadmeCard() {
         </div>
       </div>
       <div className="absolute right-[60px] top-1/2 -translate-y-1/2">
-        <Moodi mood="thinking" faceColor="#111111" size={560} followCursor={false} interactive={false} />
+        <Moodi mood="happy" faceColor="#121014" cheekColor="#ff3b4e" settle={1} size={560} followCursor={false} interactive={false} loading="eager" />
       </div>
     </div>
   );

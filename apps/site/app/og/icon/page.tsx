@@ -9,7 +9,18 @@ export default function IconCard() {
     <>
       <style>{`html,body{background:transparent!important}`}</style>
       <div className="size-[256px] overflow-hidden">
-        <Moodi size={320} faceColor="#fff6ee" style={{ margin: "-44px 0 0 -32px" }} followCursor={false} interactive={false} shadow={false} speed={0} />
+        <Moodi
+          mood="happy"
+          faceColor="#121014"
+          cheekColor="#ff3b4e"
+          settle={1}
+          size={320}
+          style={{ margin: "-44px 0 0 -32px" }}
+          followCursor={false}
+          interactive={false}
+          shadow={false}
+          loading="eager"
+        />
       </div>
     </>
   );
