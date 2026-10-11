@@ -44,6 +44,8 @@ export interface BuddyState {
   sound: boolean;
   /** ms after which the body calms down; 0 = never */
   settle: number;
+  /** with settle: the mood to switch to once it has elapsed */
+  settleMood?: Mood;
 }
 
 const PIVOT = -0.85;
@@ -410,6 +412,17 @@ outgoingLight = mix(outgoingLight, diffuseColor.rgb * 1.12, emis * 0.65);
     // ---- settle: after `settle` ms in a mood, the body eases back to calm idle breathing
     // and the extras fade out; the face keeps its expression
     this.moodTime += dt;
+    // settle-mood: once the mood has played, hand over to the resting mood
+    if (
+      s.settle > 0 &&
+      s.settleMood &&
+      !this.reaction &&
+      this.shown === s.mood &&
+      this.shown !== s.settleMood &&
+      this.moodTime >= s.settle / 1000
+    ) {
+      this.show(s.settleMood, false);
+    }
     const calm =
       s.settle > 0 && this.shown !== 'idle' ? ease(Math.min(1, Math.max(0, (this.moodTime - s.settle / 1000) / 0.7))) : 0;
 

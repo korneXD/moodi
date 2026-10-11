@@ -75,6 +75,7 @@ With the Web Component, put an `<img>` inside `<moodi-buddy>`; it shows until th
 | `shadow`                      | `boolean`                                                    | `true`      | Soft ground shadow                            |
 | `sound`                       | `boolean`                                                    | `false`     | Short synthesized effect per mood (and when it appears) |
 | `settle`                      | `number`                                                     | `0`         | ms after a mood change when the body calms to idle breathing (expression stays); `0` = never |
+| `settleMood` (`settle-mood`)  | `Mood`                                                       | —           | With `settle`: the mood to rest in once the time is up (e.g. happy for 2 s, then idle) |
 
 Boolean attributes on the Web Component take `"true"` / `"false"`.
 

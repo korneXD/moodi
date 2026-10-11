@@ -77,6 +77,7 @@ export const Moodi = forwardRef<MoodiBuddyElement | null, MoodiReactProps>(funct
     shadow,
     sound,
     settle,
+    settleMood,
     onMoodChange,
     onReady,
     poster,
@@ -129,6 +130,7 @@ export const Moodi = forwardRef<MoodiBuddyElement | null, MoodiReactProps>(funct
     shadow: flag(shadow),
     sound: flag(sound),
     settle: settle === undefined ? undefined : String(settle),
+    'settle-mood': settleMood,
     // sized before the element upgrades, so nothing shifts while three.js loads
     style: { display: 'inline-block', width: cssSize(size), height: cssSize(size), verticalAlign: 'middle', ...style },
     suppressHydrationWarning: true,

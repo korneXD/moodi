@@ -373,6 +373,7 @@ export function LiveExample() {
               size={240}
               sound={sound && chatInView}
               settle={4000}
+              settleMood="idle"
               loading="eager"
             />
           </div>

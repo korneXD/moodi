@@ -234,12 +234,14 @@ function BuddyRow({ row, index }: { row: Row; index: number }) {
 
 const SETTLE_MOODS: Mood[] = ["happy", "error", "love", "surprised"];
 const SETTLE_TIMES = [1000, 2000, 3000];
+const SETTLE_THEN: (Mood | undefined)[] = [undefined, "idle", "sleeping", "sad"];
 
 /** Side by side: the same mood with and without `settle`. */
 function SettleDemo() {
   const [target, setTarget] = useState<Mood>("happy");
   const [mood, setMood] = useState<Mood>("happy");
   const [ms, setMs] = useState(2000);
+  const [then, setThen] = useState<Mood | undefined>(undefined);
   const later = useRef<number | undefined>(undefined);
   useEffect(() => () => clearTimeout(later.current), []);
 
@@ -256,15 +258,16 @@ function SettleDemo() {
       <div className="row-text">
         <p className="method">
           <span className="method-dot method-react" aria-hidden />
-          New in 0.3: <strong>settle</strong>
+          New: <strong>settle</strong> + <strong>settleMood</strong>
         </p>
         <h2>
           <span className="index">07</span> Settle
         </h2>
         <p className="desc">
           Some moods keep moving: happy hops, error shakes, love floats with hearts. <code>settle</code> lets the mood
-          play for a while, then the body calms down to gentle breathing while the face keeps its expression. Every new
-          mood restarts the timer.
+          play for a while, then the body calms down to gentle breathing while the face keeps its expression. Add{" "}
+          <code>settleMood</code> to rest in a different mood instead, e.g. celebrate with happy, then go back to idle.
+          Every new mood restarts the timer.
         </p>
         <dl className="meta">
           <div>
@@ -273,6 +276,24 @@ function SettleDemo() {
               {SETTLE_MOODS.map((m) => (
                 <button key={m} type="button" aria-pressed={target === m} onClick={() => play(m)}>
                   {MOOD_INFO[m].label}
+                </button>
+              ))}
+            </dd>
+          </div>
+          <div>
+            <dt>Then</dt>
+            <dd className="pills">
+              {SETTLE_THEN.map((m) => (
+                <button
+                  key={m ?? "same"}
+                  type="button"
+                  aria-pressed={then === m}
+                  onClick={() => {
+                    setThen(m);
+                    play();
+                  }}
+                >
+                  {m ? MOOD_INFO[m].label : "Same, calmer"}
                 </button>
               ))}
             </dd>
@@ -303,7 +324,14 @@ function SettleDemo() {
           <code>
             <span className="syn-tag">{"<Moodi"}</span> <span className="syn-kw">mood</span>=
             <span className="syn-str">&quot;{target}&quot;</span> <span className="syn-kw">settle</span>=
-            <span className="syn-kw">{`{${ms}}`}</span> <span className="syn-tag">{"/>"}</span>
+            <span className="syn-kw">{`{${ms}}`}</span>
+            {then && (
+              <>
+                {" "}
+                <span className="syn-kw">settleMood</span>=<span className="syn-str">&quot;{then}&quot;</span>
+              </>
+            )}{" "}
+            <span className="syn-tag">{"/>"}</span>
           </code>
         </pre>
       </div>
@@ -315,8 +343,11 @@ function SettleDemo() {
             <figcaption>without settle</figcaption>
           </figure>
           <figure>
-            <Moodi mood={mood} size={150} settle={ms} loading="eager" />
-            <figcaption>settle={ms}</figcaption>
+            <Moodi mood={mood} size={150} settle={ms} settleMood={then} loading="eager" />
+            <figcaption>
+              settle={ms}
+              {then ? ` → ${then}` : ""}
+            </figcaption>
           </figure>
         </div>
       </div>

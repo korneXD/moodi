@@ -13,6 +13,8 @@ export interface PlaygroundState {
   sound: boolean;
   /** ms until the body calms down after a mood change; 0 = never */
   settle: number;
+  /** with settle: the mood it rests in afterwards (undefined = stay in the same mood) */
+  settleMood?: Mood;
 }
 
 export const INITIAL: PlaygroundState = {

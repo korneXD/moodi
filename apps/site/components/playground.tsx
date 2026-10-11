@@ -146,6 +146,7 @@ export function Playground() {
             poster={pristine && state.shape === "ghost" && shownMood === "idle" ? HERO_POSTER : undefined}
             sound={state.sound}
             settle={state.settle}
+            settleMood={state.settleMood}
             className="stage-buddy compact:!h-[min(72vw,340px)] compact:!w-[min(72vw,340px)]"
             // size scales the hero with a springy transform; the canvas keeps its resolution
             style={{
@@ -161,7 +162,7 @@ export function Playground() {
       {/* settings */}
       <aside
         aria-label="Settings"
-        className="area-panel no-scrollbar flex min-h-0 flex-col gap-[18px] overflow-y-auto border-l border-line px-5 py-[18px] compact:overflow-visible compact:border-l-0 compact:border-t"
+        className="area-panel no-scrollbar flex min-h-0 flex-col gap-[13px] overflow-y-auto border-l border-line px-5 py-[14px] compact:overflow-visible compact:border-l-0 compact:border-t"
       >
         <div className="enter" style={{ ["--i" as string]: 3 }}>
           <Row label="Shape" value={SHAPE_LABELS[state.shape]} />
@@ -232,9 +233,29 @@ export function Playground() {
               options={SETTLES.map((v) => ({ value: v, label: v ? `${v / 1000}s` : "Off" }))}
             />
           </Row>
+          <label
+            className={`mt-2 flex items-center justify-between text-[13px] transition-opacity duration-150 ${
+              state.settle ? "" : "pointer-events-none opacity-40"
+            }`}
+          >
+            <span className="text-muted">Then</span>
+            <select
+              value={state.settleMood ?? ""}
+              disabled={!state.settle}
+              onChange={(e) => set("settleMood", (e.target.value || undefined) as Mood | undefined)}
+              className="h-7 cursor-pointer rounded-md bg-chip px-2 text-[12px] text-fg outline-none hover:bg-chip-strong"
+            >
+              <option value="">Same mood, calmer</option>
+              {MOODS.map((m) => (
+                <option key={m} value={m}>
+                  Rest in {MOOD_INFO[m].label}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
         <div className="enter" style={{ ["--i" as string]: 7 }}>
-          <div className="flex flex-col gap-3">
+          <div className="grid grid-cols-2 gap-6">
             <Toggle label="Follow cursor" checked={state.followCursor} onChange={(v) => set("followCursor", v)} />
             <Toggle label="Sound" checked={state.sound} onChange={toggleSound} />
           </div>

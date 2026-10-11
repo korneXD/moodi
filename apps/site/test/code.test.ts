@@ -31,6 +31,13 @@ describe('generated code', () => {
     expect(codeText({ ...quiet, sound: true }, 'react')).toMatch(/\n {2}sound\n\/>/);
   });
 
+  it('adds settleMood only together with settle', () => {
+    expect(codeText({ ...quiet, settleMood: 'idle' }, 'react')).not.toContain('settleMood');
+    const both = { ...quiet, mood: 'happy' as const, settle: 2000, settleMood: 'idle' as const };
+    expect(codeText(both, 'react')).toContain('settleMood="idle"');
+    expect(codeText(both, 'wc')).toContain('settle-mood="idle"');
+  });
+
   it('points the CDN tab at esm.sh', () => {
     expect(codeText(quiet, 'cdn')).toContain('https://esm.sh/moodi');
   });

@@ -17,6 +17,7 @@ const PROPS: [prop: string, attr: string, type: string, def: string, desc: strin
   ["shadow", "shadow", "boolean", "true", "Soft ground shadow."],
   ["sound", "sound", "boolean", "false", "A short sound effect per mood, and when it first appears."],
   ["settle", "settle", "number", "0", "ms after a mood change when the body calms to gentle breathing; the expression stays. 0 = never."],
+  ["settleMood", "settle-mood", "Mood", "—", "With settle: the mood to rest in once the time is up (face and body)."],
 ];
 
 function Table({ rows, attr }: { rows: string[][]; attr: boolean }) {

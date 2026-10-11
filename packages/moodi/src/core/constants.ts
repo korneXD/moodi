@@ -40,6 +40,11 @@ export interface MoodiProps {
    * (hopping, shaking, hearts… stop; the facial expression stays). `0` = never. Default `0`.
    */
   settle?: number;
+  /**
+   * With `settle`: once it has elapsed, switch to this mood (face and body), e.g.
+   * `mood="happy" settle={3000} settleMood="idle"`. The `mood` prop is unchanged.
+   */
+  settleMood?: Mood;
 }
 
 export interface MoodChangeDetail {

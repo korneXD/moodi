@@ -157,6 +157,16 @@ export default function DocsPage() {
         <Code>{`<Moodi mood={done ? 'happy' : 'idle'} settle={3000} />
 
 <moodi-buddy mood="happy" settle="3000"></moodi-buddy>`}</Code>
+        <p className="mb-4 mt-6 text-[14px] leading-relaxed text-muted">
+          To rest in a <em>different</em> mood afterwards, add{" "}
+          <code className="font-mono text-fg">settleMood</code>: play the reaction for a moment, then fall back to a
+          resting state. The <code className="font-mono text-fg">mood</code> prop itself doesn&apos;t change, and the{" "}
+          <code className="font-mono text-fg">moodchange</code> event reports the switch.
+        </p>
+        <Code>{`// celebrate a successful save for 2 s, then go back to idle
+<Moodi mood={saved ? 'happy' : 'idle'} settle={2000} settleMood="idle" />
+
+<moodi-buddy mood="happy" settle="2000" settle-mood="idle"></moodi-buddy>`}</Code>
 
         <H2 id="loading">Fast first paint</H2>
         <p className="mb-4 text-[14px] leading-relaxed text-muted">

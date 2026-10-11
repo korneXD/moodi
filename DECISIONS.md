@@ -209,3 +209,12 @@ with the face, so the sockets follow blinks, gaze and expressions.
 - Unit tests with Vitest (`pnpm test`, also in CI): color handling and defaults in the
   package, the playground's code generator.
 - `packages/moodi/CHANGELOG.md`, shipped in the npm tarball.
+
+## settle-mood (0.4.0)
+
+`settle-mood` / `settleMood` builds on `settle`: once the time is up the buddy switches to
+that mood (face and body), quietly, while the `mood` prop stays as given; `moodchange` and
+the aria-label report the switch. Typical use: `mood={saved ? 'happy' : 'idle'} settle={2000}
+settleMood="idle"` celebrates a success for 2 s and goes back to rest. A new mood or a
+reaction restarts the timer; without `settle` it does nothing. The playground's "Then"
+control, the /test settle demo and the Hush chat (happy → idle after 4 s) use it.

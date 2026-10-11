@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0
+
+- `settle-mood` (React `settleMood`): with `settle`, switch to this mood once the time is
+  up, e.g. `mood="happy" settle={3000} settleMood="idle"` plays happy for 3 s, then rests in
+  idle. The `mood` prop itself is unchanged; a new mood or reaction restarts the timer.
+
 ## 0.3.2
 
 - Eyes and mouth sit in soft sockets and read as rounded, slightly raised features

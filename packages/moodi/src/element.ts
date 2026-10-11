@@ -14,6 +14,7 @@ const ATTRS = [
   'shadow',
   'sound',
   'settle',
+  'settle-mood',
 ] as const;
 
 const bool = (v: string | null, d: boolean) => (v === null ? d : v !== 'false' && v !== '0');
@@ -121,6 +122,7 @@ export class MoodiBuddyElement extends Base {
     const mood = this.getAttribute('mood');
     const speed = parseFloat(this.getAttribute('speed') ?? '');
     const settle = parseFloat(this.getAttribute('settle') ?? '');
+    const settleMood = this.getAttribute('settle-mood');
     return {
       shape: isShape(shape) ? shape : DEFAULTS.shape,
       mood: isMood(mood) ? mood : DEFAULTS.mood,
@@ -133,6 +135,7 @@ export class MoodiBuddyElement extends Base {
       shadow: bool(this.getAttribute('shadow'), DEFAULTS.shadow),
       sound: bool(this.getAttribute('sound'), DEFAULTS.sound),
       settle: Number.isFinite(settle) ? Math.max(0, settle) : DEFAULTS.settle,
+      settleMood: isMood(settleMood) ? settleMood : undefined,
     };
   }
 
@@ -228,6 +231,13 @@ export class MoodiBuddyElement extends Base {
   }
   set settle(v: number) {
     this.setAttribute('settle', String(v));
+  }
+  get settleMood(): Mood | undefined {
+    const v = this.getAttribute('settle-mood');
+    return isMood(v) ? v : undefined;
+  }
+  set settleMood(v: Mood | undefined) {
+    v ? this.setAttribute('settle-mood', v) : this.removeAttribute('settle-mood');
   }
   get sound(): boolean {
     return bool(this.getAttribute('sound'), DEFAULTS.sound);
