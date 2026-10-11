@@ -58,11 +58,6 @@
   color: var(--muted);
   font-weight: 400;
 }
-.tp nav {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
 .tp .chip {
   padding: 6px 10px;
   border-radius: 8px;

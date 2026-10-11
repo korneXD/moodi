@@ -23,7 +23,7 @@ import { CheckIcon, CopyIcon, GitHubIcon, MoonIcon, PauseIcon, SunIcon } from ".
 const BODY = Object.entries(PALETTES).map(([name, color]) => ({ name, color }));
 const FACE = [
   { name: "Black", color: "#121014" },
-  { name: "Cream", color: "#fff6ee" },
+  { name: "Latte", color: "#d1bead" },
   { name: "Night", color: "#1e2a44" },
 ];
 const CHEEKS = [

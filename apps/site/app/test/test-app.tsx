@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { loadMoodi, Moodi } from "moodi/react";
-import { GITHUB_URL } from "@/lib/site";
+import { loadMoodi } from "moodi/react";
+import { SubHeader } from "@/components/sub-header";
 import { CDN_URL, ShapesTest } from "./shapes-test";
 import { LiveExample } from "./live-example";
 
@@ -45,11 +44,7 @@ export function TestApp() {
 
   return (
     <>
-      <header className="topbar">
-        <Link className="brand" href="/">
-          <Moodi size={26} interactive={false} shadow={false} loading="eager" aria-hidden />
-          moodi <span className="brand-sub">test</span>
-        </Link>
+      <SubHeader section="test">
         <nav className="tabs" aria-label="Pages">
           {TABS.map((t) => (
             <a key={t.id} href={`#${t.id}`} className="tab" aria-current={tab === t.id ? "page" : undefined}>
@@ -57,16 +52,7 @@ export function TestApp() {
             </a>
           ))}
         </nav>
-        <nav className="links">
-          <code className="chip">$ npm i moodi three</code>
-          <Link className="nav-link" href="/docs">
-            Docs
-          </Link>
-          <a className="nav-link hide-sm" href={GITHUB_URL}>
-            GitHub
-          </a>
-        </nav>
-      </header>
+      </SubHeader>
 
       {/* both stay mounted, only hidden: buddies keep their state when you switch tabs */}
       <div hidden={tab !== "test"}>

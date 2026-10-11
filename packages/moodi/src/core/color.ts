@@ -42,10 +42,11 @@ const lin = (v: number) => (v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.
 export const luminance = (c: RGB) => 0.2126 * lin(c[0]) + 0.7152 * lin(c[1]) + 0.0722 * lin(c[2]);
 
 const INK: RGB = [0.07, 0.06, 0.08];
-const CREAM: RGB = [1, 0.97, 0.93];
+// warm latte (#d1bead), the light face color
+const CREAM: RGB = [209 / 255, 190 / 255, 173 / 255];
 const ROSE: RGB = [1, 0.42, 0.48];
 
-/** Near-black on most bodies (the default Iris included), cream only on very dark ones like Ink. */
+/** Near-black on most bodies (the default Iris included), latte only on very dark ones like Ink. */
 export const autoFace = (body: RGB): RGB => (luminance(body) > 0.06 ? mix(INK, body, 0.06) : CREAM);
 
 /** Blush that sits naturally on the body color. */

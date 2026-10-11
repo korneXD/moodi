@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Moodi } from "moodi/react";
+import { SubHeader } from "@/components/sub-header";
 import { MoodList, Palettes, PropsTable, ReactPropsTable, ShapeNames } from "./parts";
-import { AUTHOR, GITHUB_URL, jsonLd, SITE_NAME, SITE_URL, TWITTER_HANDLE } from "@/lib/site";
+import { AUTHOR, jsonLd, SITE_NAME, SITE_URL, TWITTER_HANDLE } from "@/lib/site";
 
 const DOCS_TITLE = "Docs";
 const DOCS_DESCRIPTION =
@@ -83,18 +83,7 @@ export default function DocsPage() {
   return (
     <div className="min-h-dvh">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
-      <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-line bg-bg/85 px-5 backdrop-blur">
-        <Link href="/" className="flex items-center gap-1.5">
-          <Moodi size={30} loading="interaction" poster="/posters/logo.webp" interactive={false} shadow={false} aria-hidden />
-          <span className="text-[17px] font-semibold tracking-[-0.03em]">moodi</span>
-          <span className="ml-2 text-[13px] text-muted">docs</span>
-        </Link>
-        <nav className="flex items-center gap-4 text-[13px] text-muted">
-          <Link href="/" className="hover:text-fg">Playground</Link>
-          <Link href="/test" className="hover:text-fg">Test</Link>
-          <a href={GITHUB_URL} className="hover:text-fg">GitHub</a>
-        </nav>
-      </header>
+      <SubHeader section="docs" />
 
       <main className="mx-auto max-w-[760px] px-5 pb-24 pt-12">
         <div className="flex items-center gap-5">

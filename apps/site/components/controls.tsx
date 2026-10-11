@@ -1,5 +1,6 @@
 "use client";
 
+import { ColorPicker } from "./color-picker";
 import { useId, type ReactNode } from "react";
 
 export function Row({ label, value, children }: { label: string; value?: ReactNode; children?: ReactNode }) {
@@ -26,7 +27,6 @@ interface SwatchesProps {
 }
 
 export function Swatches({ label, value, options, onChange, auto, pickerBase }: SwatchesProps) {
-  const id = useId();
   const isCustom = value !== undefined && !options.some((o) => o.color === value);
   return (
     <div role="radiogroup" aria-label={label} className="flex flex-wrap items-center gap-[7px] max-lg:gap-[5px]">
@@ -68,33 +68,7 @@ export function Swatches({ label, value, options, onChange, auto, pickerBase }: 
           </button>
         );
       })}
-      <label
-        htmlFor={id}
-        title="Custom color"
-        className="press relative grid size-[22px] cursor-pointer place-items-center rounded-full"
-      >
-        <span
-          className="size-[18px] rounded-full"
-          style={{
-            background: isCustom
-              ? value
-              : "conic-gradient(from 90deg, #ff8a8a, #ffd36e, #a6e39b, #7fd3f2, #b39cf5, #f59ad6, #ff8a8a)",
-          }}
-        />
-        <span
-          className={`absolute inset-0 rounded-full ring-[1.5px] ring-fg transition-opacity duration-150 ${
-            isCustom ? "opacity-100" : "opacity-0"
-          }`}
-        />
-        <input
-          id={id}
-          type="color"
-          aria-label={`Custom ${label.toLowerCase()} color`}
-          value={value ?? pickerBase}
-          onChange={(e) => onChange(e.target.value.toLowerCase())}
-          className="absolute inset-0 size-full cursor-pointer opacity-0"
-        />
-      </label>
+      <ColorPicker label={label} value={value} active={isCustom} base={value ?? pickerBase} onChange={(c) => onChange(c)} />
     </div>
   );
 }

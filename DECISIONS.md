@@ -180,3 +180,14 @@ a calm, smiling buddy instead of hopping forever. The timer restarts on every mo
 or reaction. The playground has a "Settle after" control (Off/1s/3s/5s) that shows up in the
 generated code; the /test example uses it on the chat (4 s) and waitlist (3 s) buddies,
 and the chat buddy now sits on its own large card so its reactions are easy to follow.
+
+## Color picker, latte face, shared header
+
+- The light face color is now latte `#d1bead` (owner's pick): the package uses it as the
+  automatic face color on very dark bodies, and the playground offers it as a preset.
+- Custom colors use our own picker (`components/color-picker.tsx`) instead of the browser's
+  native one: a saturation/brightness field, a hue slider, a hex field and the EyeDropper
+  where supported, in a popover that matches the site (portal + fixed position so the
+  scrolling panel can't clip it; keyboard: arrows, Shift for big steps, Escape closes).
+- `/docs` and `/test` share `components/sub-header.tsx` (56 px, same logo, links and
+  GitHub); the test tabs sit in its center slot.
