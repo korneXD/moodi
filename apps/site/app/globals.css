@@ -298,3 +298,8 @@ a {
 .press:active {
   transform: scale(0.97);
 }
+
+/* Product Hunt badge: show the variant that matches the theme */
+.ph-badge-light { display: none; }
+:root[data-theme="light"] .ph-badge-light { display: block; }
+:root[data-theme="light"] .ph-badge-dark { display: none; }

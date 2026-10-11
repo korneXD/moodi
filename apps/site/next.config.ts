@@ -7,7 +7,7 @@ const csp = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline' https://datafa.st https://esm.sh${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  "img-src 'self' data: blob: https://api.producthunt.com",
   "font-src 'self' data:",
   "connect-src 'self' https://datafa.st",
   "worker-src 'self' blob:",
