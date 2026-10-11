@@ -1,6 +1,6 @@
 {
   "name": "moodi",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Tiny 3D mood buddies for your UI.",
   "license": "MIT",
   "type": "module",
@@ -22,7 +22,8 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "sideEffects": [
     "./dist/index.js",

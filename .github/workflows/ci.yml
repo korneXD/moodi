@@ -17,6 +17,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm build:pkg
+      - run: pnpm test
       - run: pnpm typecheck
       - run: pnpm --filter site lint
       - run: pnpm --filter site build

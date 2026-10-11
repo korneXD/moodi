@@ -6,6 +6,10 @@
     "build": "pnpm --filter site build",
     "build:pkg": "pnpm --filter moodi build",
     "dev": "pnpm --filter moodi build && pnpm --parallel --filter moodi --filter site dev",
-    "typecheck": "pnpm -r typecheck"
+    "typecheck": "pnpm -r typecheck",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "^5.0.3"
   }
 }

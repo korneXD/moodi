@@ -191,3 +191,21 @@ and the chat buddy now sits on its own large card so its reactions are easy to f
   scrolling panel can't clip it; keyboard: arrows, Shift for big steps, Escape closes).
 - `/docs` and `/test` share `components/sub-header.tsx` (56 px, same logo, links and
   GitHub); the test tabs sit in its center slot.
+
+## Face sockets (0.3.2)
+
+The face is painted, so real geometry can't carve it (eyes are smaller than the mesh
+spacing). Instead `drawFace(..., mask = true)` paints eyes and mouth white on a second
+256 px canvas, and the shader treats it as a height field: a narrow blur raises the
+features, a wide blur sinks a ring around them. Its gradient (along the face projection's
+object X/Y axes, in view space) bends the normal, so the body's lights shade a shallow
+socket and rounded edges; a little extra occlusion darkens the socket. The map is redrawn
+with the face, so the sockets follow blinks, gaze and expressions.
+
+## Housekeeping
+
+- Posters are regenerated from the current render (they still showed the old white-eyed
+  face); the capture wakes the 3D with a key press so no buddy follows a cursor.
+- Unit tests with Vitest (`pnpm test`, also in CI): color handling and defaults in the
+  package, the playground's code generator.
+- `packages/moodi/CHANGELOG.md`, shipped in the npm tarball.

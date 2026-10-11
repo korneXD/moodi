@@ -77,8 +77,13 @@ export class Buddy implements Tickable {
   private faceCanvas = document.createElement('canvas');
   private faceCtx: CanvasRenderingContext2D;
   private faceTex: CanvasTexture;
+  /** eyes + mouth only, white on transparent: drives the sockets and rounded features */
+  private heightCanvas = document.createElement('canvas');
+  private heightCtx: CanvasRenderingContext2D;
+  private heightTex: CanvasTexture;
   private uniforms = {
     uFace: { value: null as unknown as CanvasTexture },
+    uHeight: { value: null as unknown as CanvasTexture },
     uFaceY: { value: 0 },
     uFaceScale: { value: 1.5 },
   };
@@ -164,6 +169,11 @@ export class Buddy implements Tickable {
     this.faceTex.minFilter = LinearMipmapLinearFilter;
     this.faceTex.anisotropy = 4;
     this.uniforms.uFace.value = this.faceTex;
+    this.heightCtx = this.heightCanvas.getContext('2d')!;
+    this.heightCanvas.width = this.heightCanvas.height = 256;
+    this.heightTex = new CanvasTexture(this.heightCanvas);
+    this.heightTex.minFilter = LinearMipmapLinearFilter;
+    this.uniforms.uHeight.value = this.heightTex;
 
     this.setSegments(24);
     this.material = this.createMaterial();
@@ -195,8 +205,11 @@ export class Buddy implements Tickable {
     m.onBeforeCompile = (shader) => {
       Object.assign(shader.uniforms, this.uniforms);
       shader.vertexShader = shader.vertexShader
-        .replace('#include <common>', '#include <common>\nvarying vec3 vFaceP;\nvarying vec3 vFaceN;')
-        .replace('#include <begin_vertex>', '#include <begin_vertex>\nvFaceP = position;\nvFaceN = objectNormal;');
+        .replace('#include <common>', '#include <common>\nvarying vec3 vFaceP;\nvarying vec3 vFaceN;\nvarying vec3 vTanX;\nvarying vec3 vTanY;')
+        .replace(
+          '#include <begin_vertex>',
+          '#include <begin_vertex>\nvFaceP = position;\nvFaceN = objectNormal;\nvTanX = normalize((modelViewMatrix * vec4(1.0, 0.0, 0.0, 0.0)).xyz);\nvTanY = normalize((modelViewMatrix * vec4(0.0, 1.0, 0.0, 0.0)).xyz);',
+        );
       shader.fragmentShader = shader.fragmentShader
         .replace(
           '#include <common>',
@@ -204,8 +217,15 @@ export class Buddy implements Tickable {
 varying vec3 vFaceP;
 varying vec3 vFaceN;
 uniform sampler2D uFace;
+uniform sampler2D uHeight;
 uniform float uFaceY;
-uniform float uFaceScale;`,
+uniform float uFaceScale;
+varying vec3 vTanX;
+varying vec3 vTanY;
+// features sit on a soft bump inside a shallow socket: narrow blur up, wide blur down
+float faceHeight(vec2 uv) {
+  return 0.9 * texture2D(uHeight, uv, 1.0).a - 0.8 * texture2D(uHeight, uv, 3.2).a;
+}`,
         )
         .replace(
           '#include <map_fragment>',
@@ -217,6 +237,17 @@ float faceMask = fc.a * inb * smoothstep(0.12, 0.45, normalize(vFaceN).z);
 diffuseColor.rgb = mix(diffuseColor.rgb, fc.rgb, faceMask);`,
         )
         .replace(
+          '#include <normal_fragment_maps>',
+          `#include <normal_fragment_maps>
+float faceFront = inb * smoothstep(0.12, 0.45, normalize(vFaceN).z);
+if (faceFront > 0.0) {
+  float e = 1.0 / 170.0;
+  float hx = faceHeight(fuv + vec2(e, 0.0)) - faceHeight(fuv - vec2(e, 0.0));
+  float hy = faceHeight(fuv + vec2(0.0, e)) - faceHeight(fuv - vec2(0.0, e));
+  normal = normalize(normal - 2.2 * faceFront * (hx * vTanX + hy * vTanY));
+}`,
+        )
+        .replace(
           '#include <roughnessmap_fragment>',
           '#include <roughnessmap_fragment>\nroughnessFactor = mix(roughnessFactor, 0.35, faceMask * 0.7);',
         )
@@ -224,6 +255,9 @@ diffuseColor.rgb = mix(diffuseColor.rgb, fc.rgb, faceMask);`,
           '#include <opaque_fragment>',
           `float rimK = 1.0 - saturate(dot(normal, normalize(vViewPosition)));
 outgoingLight += diffuseColor.rgb * 0.24 * rimK * rimK + vec3(0.05) * pow(rimK, 4.0);
+// a little occlusion in the sockets around eyes and mouth
+float socket = clamp(texture2D(uHeight, fuv, 3.4).a - texture2D(uHeight, fuv, 0.0).a, 0.0, 1.0);
+outgoingLight *= 1.0 - 0.32 * socket * faceFront;
 // soft contact shading on the underside
 outgoingLight *= mix(0.62, 1.0, smoothstep(-0.95, 0.35, normalize(vFaceN).y));
 // eyes and mouth glow a little: mostly unlit, so they read as light, not paint
@@ -335,6 +369,7 @@ outgoingLight = mix(outgoingLight, diffuseColor.rgb * 1.12, emis * 0.65);
     this.geometry.dispose();
     this.material.dispose();
     this.faceTex.dispose();
+    this.heightTex.dispose();
     this.onMoodChange = undefined;
   }
 
@@ -582,6 +617,8 @@ outgoingLight = mix(outgoingLight, diffuseColor.rgb * 1.12, emis * 0.65);
       toCss(this.faceC),
     );
     this.faceTex.needsUpdate = true;
+    drawFace(this.heightCtx, f, this.blink, '#fff', '#fff', 0, '#fff', '#fff', '#fff', '#fff', true);
+    this.heightTex.needsUpdate = true;
     return true;
   }
 

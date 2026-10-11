@@ -153,6 +153,8 @@ export function drawFace(
   inner: string,
   /** ends of the mouth gradient */
   mouthEdge: string,
+  /** features only (eyes + mouth, no cheeks or highlights): the bump/height map */
+  mask = false,
 ) {
   const S = ctx.canvas.width;
   ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -165,7 +167,7 @@ export function drawFace(
   const ly = f.lookY * 0.06;
 
   // cheeks: soft, blurred blush; little "///" strokes when flushed
-  if (f.blush > 0.01) {
+  if (f.blush > 0.01 && !mask) {
     const blur = S * 0.018;
     ctx.save();
     if ('filter' in ctx) ctx.filter = `blur(${blur}px)`;
@@ -234,7 +236,7 @@ export function drawFace(
       }
       // soft halo (a drawn gradient, not shadowBlur: WebKit misplaces canvas shadows
       // under a scaled transform) + an eye that is a touch brighter in the middle
-      if (glow > 0.5) halo(ctx, cx, cy, rx * 2.1, ry * 1.9, faceColor, 0.35 * normal);
+      if (glow > 0.5 && !mask) halo(ctx, cx, cy, rx * 2.1, ry * 1.9, faceColor, 0.35 * normal);
       const eg = ctx.createRadialGradient(cx, cy - ry * 0.2, 0, cx, cy, Math.max(rx, ry));
       eg.addColorStop(0, glowCenter);
       eg.addColorStop(1, faceColor);
@@ -243,7 +245,7 @@ export function drawFace(
       ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
       ctx.fill();
       ctx.fillStyle = faceColor;
-      if (open > 0.35) {
+      if (open > 0.35 && !mask) {
         // one dot that rolls toward the gaze (and the cursor)
         const gx = Math.max(-1, Math.min(1, f.lookX));
         const gy = Math.max(-1, Math.min(1, f.lookY));
@@ -258,7 +260,7 @@ export function drawFace(
       ctx.restore();
     }
 
-    if (glow > 0.5 && special > 0.01) halo(ctx, cx, cy, rx * 2, rx * 1.8, faceColor, 0.3 * special);
+    if (glow > 0.5 && !mask && special > 0.01) halo(ctx, cx, cy, rx * 2, rx * 1.8, faceColor, 0.3 * special);
     ctx.fillStyle = faceColor;
     if (f.happyEye > 0.01) {
       const s = 0.6 + 0.4 * f.happyEye;
@@ -307,7 +309,7 @@ export function drawFace(
     ctx.fillStyle = inner;
     trace();
     ctx.fill();
-    if (open > 0.02) {
+    if (open > 0.02 && !mask) {
       ctx.save();
       trace();
       ctx.clip();

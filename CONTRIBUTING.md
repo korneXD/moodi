@@ -11,6 +11,7 @@ pnpm dev          # builds the package, then runs the site on http://localhost:3
 Before opening a pull request:
 
 ```bash
+pnpm test
 pnpm typecheck
 pnpm build
 ```
