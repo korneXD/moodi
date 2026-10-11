@@ -12,7 +12,7 @@ export const GITHUB_URL = "https://github.com/korneXD/moodi";
 export const FEEDBACK_URL = "https://insigh.to/b/moodi";
 export const NPM_URL = "https://www.npmjs.com/package/moodi";
 export const TWITTER_HANDLE = "@itsk0rn3l";
-export const AUTHOR = { handle: "itsk0rn3l", name: "Kornel", url: "https://x.com/itsk0rn3l", avatar: "/creator.jpg" };
+export const AUTHOR = { handle: "itsk0rn3l", name: "Kornel", url: "https://x.com/itsk0rn3l", avatar: "/creator-v2.jpg" };
 
 /** Safe to drop into a <script type="application/ld+json"> tag. */
 export function jsonLd(data: unknown) {
