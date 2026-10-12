@@ -47,7 +47,7 @@ export function TestApp() {
       <SubHeader section="test">
         <nav className="tabs" aria-label="Pages">
           {TABS.map((t) => (
-            <a key={t.id} href={`#${t.id}`} className="tab" aria-current={tab === t.id ? "page" : undefined}>
+            <a key={t.id} href={`#${t.id}`} data-fast-goal={t.id === "example" ? "live_example_open" : "test_tab_open"} className="tab" aria-current={tab === t.id ? "page" : undefined}>
               {t.label}
             </a>
           ))}

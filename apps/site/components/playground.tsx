@@ -396,7 +396,7 @@ function Header({ state }: { state: PlaygroundState }) {
 
   return (
     <header className="area-header flex items-center border-b border-line px-4 sm:px-5">
-      <Link href="/" className="enter flex items-center gap-1.5" aria-label="moodi home">
+      <Link href="/" data-fast-goal="home_click" data-fast-goal-from="playground" className="enter flex items-center gap-1.5" aria-label="moodi home">
         <Moodi
           shape={state.shape}
           color={state.color}
@@ -448,15 +448,17 @@ function Header({ state }: { state: PlaygroundState }) {
         >
           <GitHubIcon />
         </a>
-        <Link href="/test" className="press hidden h-8 items-center rounded-lg px-2 text-[13px] text-muted hover:text-fg sm:flex">
+        <Link href="/test" data-fast-goal="test_open" data-fast-goal-from="playground" className="press hidden h-8 items-center rounded-lg px-2 text-[13px] text-muted hover:text-fg sm:flex">
           Test
         </Link>
-        <Link href="/docs" className="press hidden h-8 items-center rounded-lg px-2 text-[13px] text-muted hover:text-fg sm:flex">
+        <Link href="/docs" data-fast-goal="docs_open" data-fast-goal-from="playground" className="press hidden h-8 items-center rounded-lg px-2 text-[13px] text-muted hover:text-fg sm:flex">
           Docs
         </Link>
         <button
           type="button"
           onClick={toggleTheme}
+          data-fast-goal="theme_toggle"
+          data-fast-goal-to={theme === "dark" ? "light" : "dark"}
           className="press grid size-8 place-items-center rounded-lg text-muted hover:text-fg"
           aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
         >
