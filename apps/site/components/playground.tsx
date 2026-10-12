@@ -482,7 +482,7 @@ function Header({ state }: { state: PlaygroundState }) {
 
 const PH_URL = "https://www.producthunt.com/products/moodi?embed=true&utm_source=badge-featured&utm_medium=badge&utm_campaign=badge-moodi";
 const phBadge = (theme: "dark" | "light") =>
-  `https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1276277&theme=${theme}&t=1791720323105`;
+  `https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1276277&theme=${theme}&t=1791788620709`;
 
 /** Featured-on-Product-Hunt badge; the variant matching the site theme is shown via CSS. */
 function ProductHuntBadge() {
