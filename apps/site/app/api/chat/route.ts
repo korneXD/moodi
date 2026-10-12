@@ -1,6 +1,8 @@
 import { openai } from "@ai-sdk/openai";
+import { after } from "next/server";
 import { z } from "zod";
 import { chatStream } from "@/lib/chat-stream";
+import { trackGoal } from "@/lib/datafast";
 
 /*
   AI replies for the "Hush" chat on /test. The model returns { mood, reply }: the reply is
@@ -61,6 +63,9 @@ export async function POST(req: Request) {
     content: m.text.slice(0, 300),
   }));
   if (messages[messages.length - 1].role !== "user") return json(400, { error: "bad request" });
+
+  // counted once the response is sent, so it never delays the reply
+  after(() => trackGoal(req, "hush_chat_message", { turn: String(messages.filter((m) => m.role === "user").length) }));
 
   const stream = chatStream(openai(process.env.OPENAI_MODEL ?? "gpt-4.1-mini"), messages, req.signal);
 

@@ -85,6 +85,8 @@ export function CodeBlock({ state, onReset }: { state: PlaygroundState; onReset:
             <button
               type="button"
               onClick={() => copy(codeText(state, tab))}
+              data-fast-goal="copy_code"
+              data-fast-goal-tab={tab}
               aria-label={copied ? "Copied" : "Copy code"}
               className="press flex h-7 items-center gap-1.5 rounded-md px-2 text-[12px] text-muted hover:text-fg"
             >

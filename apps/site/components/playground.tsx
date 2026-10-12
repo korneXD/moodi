@@ -415,6 +415,7 @@ function Header({ state }: { state: PlaygroundState }) {
         href={AUTHOR.url}
         target="_blank"
         rel="noopener noreferrer"
+        data-fast-goal="x_profile_click"
         className="enter mr-auto ml-2 flex items-center gap-2 rounded-full py-1 pl-1.5 pr-3 text-[17px] tracking-[-0.02em] text-muted transition-colors duration-150 hover:bg-chip hover:text-fg"
         style={{ ["--i" as string]: 0.5 }}
       >
@@ -427,6 +428,7 @@ function Header({ state }: { state: PlaygroundState }) {
         <button
           type="button"
           onClick={() => copy("npm i moodi three")}
+          data-fast-goal="copy_install"
           className="press flex h-8 items-center gap-2 rounded-lg bg-chip pl-3 pr-2.5 font-mono text-[12.5px] text-fg hover:bg-chip-strong max-sm:hidden"
           aria-label={copied ? "Copied npm i moodi" : "Copy npm i moodi"}
         >
@@ -440,6 +442,7 @@ function Header({ state }: { state: PlaygroundState }) {
           href={GITHUB_URL}
           target="_blank"
           rel="noopener noreferrer"
+          data-fast-goal="github_click"
           className="press grid size-8 place-items-center rounded-lg text-muted hover:text-fg"
           aria-label="GitHub"
         >
@@ -463,6 +466,7 @@ function Header({ state }: { state: PlaygroundState }) {
           href={FEEDBACK_URL}
           target="_blank"
           rel="noopener noreferrer"
+          data-fast-goal="feedback_click"
           className="press grid size-8 place-items-center rounded-lg text-muted hover:text-fg"
           aria-label="Send feedback (opens in a new tab)"
           title="Feedback"
@@ -485,6 +489,7 @@ function ProductHuntBadge() {
       href={PH_URL}
       target="_blank"
       rel="noopener noreferrer"
+      data-fast-goal="producthunt_click"
       className="enter press absolute left-5 top-4 compact:static compact:mt-6"
       style={{ ["--i" as string]: 2 }}
     >
