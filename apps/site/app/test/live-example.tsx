@@ -357,7 +357,7 @@ export function LiveExample() {
                 maxLength={300}
                 disabled={busy}
               />
-              <button className="btn btn-primary" type="submit" disabled={busy}>
+              <button className="btn btn-primary" type="submit" data-fast-goal="chat_send_click" disabled={busy}>
                 Send
               </button>
             </form>
