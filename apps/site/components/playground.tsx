@@ -500,9 +500,13 @@ function ProductHuntBadge() {
         <img
           key={theme}
           className={`ph-badge-${theme}`}
-          alt="moodi - Give your UI a face. One line of code. | Product Hunt"
+          alt="moodi - Your loading spinner, but it has feelings | Product Hunt"
           width={200}
           height={43}
+          // lazy + low priority: the hidden theme variant is never fetched, and the slow third-party SVG never competes with the hero
+          loading="lazy"
+          decoding="async"
+          fetchPriority="low"
           src={phBadge(theme)}
         />
       ))}
