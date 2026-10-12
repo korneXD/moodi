@@ -55,6 +55,9 @@ export const viewport: Viewport = { themeColor: "#0c0b0a" };
 // runs before paint so the theme never flashes: a saved choice wins, else the OS preference
 const themeScript = `try{var t=localStorage.getItem('moodi-theme');if(t!=='light'&&t!=='dark')t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.dataset.theme=t}catch(e){}`;
 
+// DataFast queue: window.datafast("goal") calls made before the main script loads are replayed
+const datafastQueue = `window.datafast=window.datafast||function(){window.datafast.q=window.datafast.q||[];window.datafast.q.push(arguments)}`;
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
@@ -65,6 +68,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script id="datafast-queue" dangerouslySetInnerHTML={{ __html: datafastQueue }} />
         <Script
           data-website-id="dfid_pssJNAwHn9MWijVTh8hCV"
           data-domain="getmoodi.dev"
