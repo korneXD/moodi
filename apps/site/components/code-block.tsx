@@ -64,6 +64,8 @@ export function CodeBlock({ state, onReset }: { state: PlaygroundState; onReset:
                 type="button"
                 aria-selected={tab === t.id}
                 onClick={() => setTab(t.id)}
+                data-fast-goal="code_tab_select"
+                data-fast-goal-tab={t.id}
                 className={`press whitespace-nowrap rounded-md px-[7px] py-1 text-[12px] ${
                   tab === t.id ? "bg-chip-strong text-fg" : "text-muted hover:text-fg"
                 }`}
