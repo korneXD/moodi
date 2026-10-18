@@ -10,7 +10,7 @@ Please **do not open a public issue** for security problems.
 
 Use GitHub's private reporting instead: **Security → Report a vulnerability** on
 <https://github.com/korneXD/moodi>, or send a direct message to
-[@itsk0rn3l on X](https://x.com/itsk0rn3l).
+[@indiekornel on X](https://x.com/indiekornel).
 
 Include what you found, how to reproduce it, and which version you tested. You
 should get a reply within a few days. Once a fix is released, the report can be

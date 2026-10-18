@@ -1,5 +1,5 @@
 Contact: https://github.com/korneXD/moodi/security/advisories/new
-Contact: https://x.com/itsk0rn3l
+Contact: https://x.com/indiekornel
 Expires: 2027-10-10T00:00:00.000Z
 Preferred-Languages: en, hu
 Canonical: https://www.getmoodi.dev/.well-known/security.txt

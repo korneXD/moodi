@@ -9,7 +9,7 @@ textures, nothing to download besides three.js.
 
 ![moodi](https://raw.githubusercontent.com/korneXD/moodi/main/.github/assets/readme.png)
 
-**Playground:** <https://www.getmoodi.dev> · by [@itsk0rn3l](https://x.com/itsk0rn3l)
+**Playground:** <https://www.getmoodi.dev> · by [@indiekornel](https://x.com/indiekornel)
 
 ## Install
 
@@ -113,4 +113,4 @@ Also exported: `SHAPES`, `MOODS`, `PALETTES`, `MOOD_INFO`, `DEFAULTS`, `defineMo
 
 ## License
 
-[MIT](./LICENSE) © itsk0rn3l
+[MIT](./LICENSE) © indiekornel

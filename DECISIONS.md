@@ -13,8 +13,8 @@ Choices made where the spec left room, or where the owner changed it.
   that in the address bar, so the playground keeps state in memory only.
 - **Domain `getmoodi.dev`** instead of `moodi.dev`.
 - **Repository is public** (`korneXD/moodi`) so the GitHub link in the header works.
-- Header credits the author: `by @itsk0rn3l` with the X avatar (stored locally in
-  `apps/site/public/itsk0rn3l.jpg`, no third-party request at runtime).
+- Header credits the author: `by @indiekornel` with the X avatar (stored locally in
+  `apps/site/public/creator-v3.jpg`, no third-party request at runtime).
 - Light eyes get a dark pupil; eyes and mouth are partly emissive so they glow.
 - `size` is adjustable in the playground. The hero stays large; the slider scales it
   within the stage (capped) and shows up in the generated code.

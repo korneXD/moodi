@@ -69,7 +69,7 @@
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "npm run build"
   },
-  "author": "itsk0rn3l (https://x.com/itsk0rn3l)",
+  "author": "indiekornel (https://x.com/indiekornel)",
   "bugs": {
     "url": "https://github.com/korneXD/moodi/issues"
   }

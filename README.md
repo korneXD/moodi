@@ -8,7 +8,7 @@ happy, error, sleeping.
 
 - **Playground:** <https://www.getmoodi.dev>
 - **Package docs:** [packages/moodi/README.md](packages/moodi/README.md)
-- by [@itsk0rn3l](https://x.com/itsk0rn3l)
+- by [@indiekornel](https://x.com/indiekornel)
 
 ```bash
 npm i moodi three
@@ -68,4 +68,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md).
 
 ## License
 
-[MIT](LICENSE) © itsk0rn3l
+[MIT](LICENSE) © indiekornel
